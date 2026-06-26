@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Bazar — Unit 1 | Chapter 1 | All Sets 1-15</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Syne',sans-serif;background:#f0faf4;min-height:100vh;color:#1c2e24}
+.top-bar{background:#1a7a4a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.top-logo{font-size:1.1rem;font-weight:800;color:white}.top-logo span{color:#f9a825}
+.timer-box{background:rgba(255,255,255,0.15);border-radius:8px;padding:0.4rem 1rem;display:flex;align-items:center;gap:6px;font-size:1rem;font-weight:700;color:white}
+.timer-box.danger{background:#dc3545}
+.main{max-width:820px;margin:0 auto;padding:1.5rem 1rem}
+.hub-header{text-align:center;margin-bottom:2rem}
+.hub-header h1{font-family:'Tiro Bangla',serif;font-size:1.8rem;color:#1c2e24}
+.hub-header p{font-family:'Tiro Bangla',serif;font-size:0.95rem;color:#5a7a66;margin-top:0.3rem}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
+.set-card{background:white;border-radius:14px;padding:1.5rem;border:1.5px solid #c5dccb;transition:all 0.2s;cursor:pointer;color:#1c2e24;box-shadow:0 2px 8px rgba(26,122,74,0.06)}
+.set-card:hover{transform:translateY(-3px);border-color:#1a7a4a;box-shadow:0 6px 20px rgba(26,122,74,0.12)}
+.set-card .icon{font-size:2.2rem;margin-bottom:0.3rem}
+.set-card .set-num{font-weight:700;font-size:1.1rem;color:#1a7a4a}
+.set-card .set-title{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin:0.2rem 0 0.5rem}
+.set-card .set-meta{display:flex;gap:1rem;font-size:0.7rem;color:#5a7a66}
+.set-card .set-meta span{background:#f0faf4;padding:0.15rem 0.6rem;border-radius:4px}
+.quiz-info{background:white;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;border:1px solid #c5dccb;display:flex;gap:1rem;flex-wrap:wrap}
+.info-item{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+.info-item strong{color:#1a7a4a}
+.progress-wrap{background:#c5dccb;border-radius:4px;height:6px;margin-bottom:1.2rem;overflow:hidden}
+.progress-fill{height:100%;background:#1a7a4a;border-radius:4px;transition:width 0.3s}
+.q-card{background:white;border-radius:14px;padding:1.4rem;margin-bottom:1rem;border:1px solid #c5dccb;box-shadow:0 2px 10px rgba(26,122,74,0.06)}
+.q-num{font-size:0.75rem;font-weight:700;color:#e8730a;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.6rem}
+.q-text{font-family:'Tiro Bangla',serif;font-size:1rem;color:#1c2e24;line-height:1.7;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:0.6rem}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;width:100%;font-family:inherit}
+.opt:hover:not(.disabled){border-color:#1a7a4a;background:#f0faf4}
+.opt-circle{min-width:28px;height:28px;border-radius:50%;border:1.5px solid #c5dccb;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5a7a66;flex-shrink:0;transition:all 0.15s}
+.opt-text{font-family:'Tiro Bangla',serif;font-size:0.92rem;color:#1c2e24;line-height:1.6;padding-top:2px}
+.opt.correct{border-color:#1a7a4a;background:#e8f7ef}
+.opt.correct .opt-circle{background:#1a7a4a;border-color:#1a7a4a;color:white}
+.opt.wrong{border-color:#dc3545;background:#fdf0f0}
+.opt.wrong .opt-circle{background:#dc3545;border-color:#dc3545;color:white}
+.opt.disabled{cursor:default}
+.explanation{background:#f0faf4;border-left:3px solid #1a7a4a;border-radius:0 8px 8px 0;padding:0.8rem 1rem;margin-top:0.8rem;display:none}
+.explanation.show{display:block}
+.explanation p{font-family:'Tiro Bangla',serif;font-size:0.88rem;color:#2c4035;line-height:1.7}
+.explanation strong{color:#1a7a4a}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem}
+.score-show{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66}
+.next-btn{background:#1a7a4a;color:white;border:none;padding:0.6rem 1.4rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:0.9rem;cursor:pointer;transition:all 0.15s}
+.next-btn:hover{background:#2aad68}
+.next-btn:disabled{background:#c5dccb;cursor:default}
+.result-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb;display:none}
+.result-wrap.show{display:block}
+.result-icon{font-size:3rem;margin-bottom:0.5rem}
+.result-score{font-size:3.5rem;font-weight:800;color:#1a7a4a}
+.result-total{font-size:1rem;color:#5a7a66;margin-bottom:0.5rem;font-family:'Tiro Bangla',serif}
+.result-grade{font-size:1.2rem;font-weight:600;color:#1c2e24;margin-bottom:1.5rem;font-family:'Tiro Bangla',serif}
+.result-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+.result-bar{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+.rb-num{font-size:1.4rem;font-weight:800}
+.rb-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66;margin-top:0.2rem}
+.retry-btn{background:#1a7a4a;color:white;border:none;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-right:0.5rem}
+.review-btn{background:white;color:#1a7a4a;border:1.5px solid #1a7a4a;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer}
+.back-btn{background:white;color:#5a7a66;border:1.5px solid #c5dccb;padding:0.75rem 2rem;border-radius:8px;font-family:'Tiro Bangla',serif;font-size:1rem;cursor:pointer;margin-top:0.6rem}
+.start-wrap{background:white;border-radius:14px;padding:2rem;text-align:center;border:1px solid #c5dccb}
+.start-wrap h2{font-family:'Tiro Bangla',serif;font-size:1.4rem;color:#1c2e24;margin-bottom:0.5rem}
+.start-wrap p{font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#5a7a66;line-height:1.7;margin-bottom:1.2rem}
+.start-info{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+.si{background:#f0faf4;border-radius:10px;padding:0.8rem;text-align:center}
+.si-num{font-size:1.4rem;font-weight:800;color:#1a7a4a}
+.si-label{font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#5a7a66}
+.start-btn{background:#1a7a4a;color:white;border:none;padding:0.85rem 2.5rem;border-radius:10px;font-family:'Tiro Bangla',serif;font-size:1.05rem;cursor:pointer;box-shadow:0 4px 15px rgba(26,122,74,0.3)}
+.start-btn:hover{background:#2aad68}
+.start-btn:disabled{background:#c5dccb;cursor:not-allowed;box-shadow:none}
+.login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
+.login-overlay.active{display:flex}
+.login-modal{background:white;border-radius:16px;padding:2.5rem;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-modal h2{font-family:'Tiro Bangla',serif;font-size:1.3rem;color:#1c2e24;text-align:center;margin-bottom:0.3rem}
+.login-modal p{font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;text-align:center;margin-bottom:1.5rem}
+.login-modal label{font-size:0.8rem;font-weight:600;color:#1c2e24;display:block;margin-bottom:0.3rem}
+.login-modal input{width:100%;padding:0.7rem 1rem;border:1.5px solid #c5dccb;border-radius:8px;font-size:0.95rem;margin-bottom:1rem;font-family:'Tiro Bangla',serif}
+.login-modal input:focus{outline:none;border-color:#1a7a4a}
+.login-modal .login-btn{width:100%;background:#1a7a4a;color:white;border:none;padding:0.75rem;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Tiro Bangla',serif}
+.login-modal .login-btn:hover{background:#2aad68}
+.login-modal .login-btn:disabled{background:#c5dccb;cursor:not-allowed}
+.login-modal .error-msg{color:#dc3545;font-size:0.8rem;text-align:center;margin-top:0.5rem;font-family:'Tiro Bangla',serif;display:none}
+.login-modal .limit-info{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:0.6rem 1rem;margin-bottom:1rem;font-family:'Tiro Bangla',serif;font-size:0.8rem;color:#856404;display:none}
+.login-modal .set-name-display{background:#f0faf4;border-radius:8px;padding:0.5rem;text-align:center;margin-bottom:1rem;font-family:'Tiro Bangla',serif;font-size:0.9rem;color:#1a7a4a;font-weight:600}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-logo">Test <span>Bazar</span></div>
+  <div class="timer-box" id="timerBox">⏱ <span id="timerDisplay">10:00</span></div>
+</div>
+
+<div class="main">
+
+  <!-- ===== LOGIN OVERLAY ===== -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-modal">
+      <h2>🔐 লগইন করুন</h2>
+      <p>Test শুরু করতে আপনার ইউজারনেম ও পাসওয়ার্ড দিন</p>
+      <div class="set-name-display" id="loginSetName">📚 Set 1</div>
+      <div class="limit-info" id="limitInfo">⚠️ <span id="limitMsg"></span></div>
+      <label>ইউজারনেম</label>
+      <input type="text" id="loginUsername" placeholder="আপনার ইউজারনেম লিখুন">
+      <label>পাসওয়ার্ড</label>
+      <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড লিখুন" onkeydown="if(event.key==='Enter') doLoginFromSet()">
+      <button class="login-btn" id="loginBtn" onclick="doLoginFromSet()">✅ লগইন করে Test শুরু করো</button>
+      <div class="error-msg" id="loginError">❌ ভুল ইউজারনেম বা পাসওয়ার্ড। আবার চেষ্টা করুন।</div>
+    </div>
+  </div>
+
+  <!-- ===== HUB PAGE ===== -->
+  <div id="hubPage">
+    <div class="hub-header">
+      <h1>📚 Unit 1 — প্রথম অধ্যায়: পর্যটকদের বিবরণের প্রেক্ষিতে ভারতের সমাজ ও রাজনীতি (১০ ও ১৭ শতকের মধ্যে)</h1>
+      <p>নিচের সেটগুলো থেকে বেছে নিন। Test শুরু করতে সেটে ক্লিক করুন এবং লগইন করুন।</p>
+      <div id="hubUserInfo" style="font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin-top:0.5rem;"></div>
+    </div>
+    <div class="set-grid" id="setGrid"></div>
+  </div>
+
+  <!-- ===== TEST AREA ===== -->
+  <div id="testArea" class="hidden">
+    <div class="quiz-info">
+      <div class="info-item">🎓 <strong id="testSetName">শিক্ষাবিজ্ঞান</strong> — Unit 1 | Ch 1 | <span id="testSetLabel">Set 1</span></div>
+      <div class="info-item">📝 <span id="testTopic">ভারতে আগত বিদেশি পর্যটক</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="q-card" id="qCard">
+      <div class="q-num" id="qNum">প্রশ্ন ১ / ১৫</div>
+      <div class="q-text" id="qText"></div>
+      <div class="opts" id="qOpts"></div>
+      <div class="explanation" id="explanation"><p id="explanationText"></p></div>
+      <div class="nav-row">
+        <div class="score-show" id="scoreShow">সঠিক: ০ | ভুল: ০</div>
+        <button class="next-btn" id="nextBtn" onclick="nextQ()" disabled>পরবর্তী →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULT AREA ===== -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-score" id="finalScore"></div>
+    <div class="result-total">/ ১৫</div>
+    <div class="result-grade" id="resultGrade"></div>
+    <div class="result-bars">
+      <div class="result-bar"><div class="rb-num" id="rbCorrect" style="color:#1a7a4a"></div><div class="rb-label">সঠিক</div></div>
+      <div class="result-bar"><div class="rb-num" id="rbWrong" style="color:#dc3545"></div><div class="rb-label">ভুল</div></div>
+      <div class="result-bar"><div class="rb-num" id="rbPct" style="color:#e8730a"></div><div class="rb-label">স্কোর</div></div>
+    </div>
+    <div id="attemptInfo" style="font-family:'Tiro Bangla',serif;font-size:0.85rem;color:#5a7a66;margin-bottom:1rem;"></div>
+    <button class="retry-btn" onclick="startQuiz(currentSetId)">আবার চেষ্টা করো</button>
+    <button class="review-btn" onclick="showReview()">উত্তর দেখো</button>
+    <br>
+    <button class="back-btn" onclick="goToHub()">← Hub এ ফিরে যাও</button>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+//  ইউজার ডেটাবেস
+// ============================================================
+const MAX_ATTEMPTS = 10;
+const TOTAL_SETS = 15;
+
+const userData = [
+  {username:"alfa_romeo", password:"ARx7P29m", attempts:{}},
+  {username:"santos", password:"St8Qv41L", attempts:{}},
+  {username:"falcon", password:"Fc3MZ92k", attempts:{}},
+  {username:"titan", password:"Ti6Rp84W", attempts:{}},
+  {username:"matrix", password:"Mx5Kd73N", attempts:{}},
+  {username:"phoenix", password:"Ph9Js28V", attempts:{}},
+  {username:"cobra", password:"Cb4Ln65X", attempts:{}},
+  {username:"shadow", password:"Sh7Wp19Q", attempts:{}},
+  {username:"rocket", password:"Rc2Ty86M", attempts:{}},
+  {username:"warrior", password:"Wr8Az34K", attempts:{}},
+  {username:"eagle", password:"Eg5Xq72P", attempts:{}},
+  {username:"thunder", password:"Th1Vk93R", attempts:{}},
+  {username:"dragon", password:"Dr6Hm48N", attempts:{}},
+  {username:"panther", password:"Pa9Nc25J", attempts:{}},
+  {username:"viking", password:"Vi4Qs87L", attempts:{}},
+  {username:"hunter", password:"Hu7Bp31X", attempts:{}},
+  {username:"legend", password:"Le2Mz64T", attempts:{}},
+  {username:"ranger", password:"Ra8Kd95W", attempts:{}},
+  {username:"knight", password:"Kn3Xp57Q", attempts:{}},
+  {username:"turbo", password:"Tu6Lv21N", attempts:{}},
+  {username:"alpha", password:"Ap9Rm83K", attempts:{}},
+  {username:"bravo", password:"Br5Yt42M", attempts:{}},
+  {username:"charlie", password:"Ch7Wq16P", attempts:{}},
+  {username:"delta", password:"De4Nk78X", attempts:{}},
+  {username:"echo", password:"Ec8Jp35V", attempts:{}},
+  {username:"foxtrot", password:"Fx2Lm94Q", attempts:{}},
+  {username:"gamma", password:"Ga6Xs27T", attempts:{}},
+  {username:"helix", password:"He1Vp85N", attempts:{}},
+  {username:"inferno", password:"In9Qk43L", attempts:{}},
+  {username:"jaguar", password:"Ja5Mz72W", attempts:{}},
+  {username:"karma", password:"Ka8Rp14X", attempts:{}},
+  {username:"laser", password:"La3Tn67Q", attempts:{}},
+  {username:"meteor", password:"Me7Wx29P", attempts:{}},
+  {username:"nova", password:"No4Kz86M", attempts:{}},
+  {username:"omega", password:"Om2Lp53V", attempts:{}},
+  {username:"pegasus", password:"Pe9Xq71N", attempts:{}},
+  {username:"quantum", password:"Qu5Vr38K", attempts:{}},
+  {username:"rebel", password:"Re8Mz24T", attempts:{}},
+  {username:"storm", password:"St1Kp97W", attempts:{}},
+  {username:"tornado", password:"To6Nx45Q", attempts:{}},
+  {username:"ultra", password:"Ul3Wp82M", attempts:{}},
+  {username:"vector", password:"Ve7Lq19X", attempts:{}},
+  {username:"wolf", password:"Wo4Rm63P", attempts:{}},
+  {username:"xenon", password:"Xe9Tk25N", attempts:{}},
+  {username:"yodha", password:"Yo2Vz78K", attempts:{}},
+  {username:"zeus", password:"Ze8Mp41Q", attempts:{}},
+  {username:"atlas", password:"At5Lx93W", attempts:{}},
+  {username:"blaze", password:"Bl1Qn67M", attempts:{}},
+  {username:"cyclone", password:"Cy7Rp34T", attempts:{}},
+  {username:"dynamo", password:"Dy4Wk82X", attempts:{}},
+  {username:"apollo", password:"Ap7Kx94Lm", attempts:{}},
+  {username:"archer", password:"Ar3Vp62Qn", attempts:{}},
+  {username:"asteroid", password:"As8Tm15Rw", attempts:{}},
+  {username:"bandit", password:"Ba5Qz71Kp", attempts:{}},
+  {username:"bison", password:"Bi9Ln34Xt", attempts:{}},
+  {username:"bullet", password:"Bu2Wr86Mv", attempts:{}},
+  {username:"canyon", password:"Ca6Xp29Qk", attempts:{}},
+  {username:"captain", password:"Cp1Mz75Ln", attempts:{}},
+  {username:"comet", password:"Co8Tk43Wp", attempts:{}},
+  {username:"cyclonex", password:"Cy4Vr92Km", attempts:{}},
+  {username:"diesel", password:"Di7Lp18Qx", attempts:{}},
+  {username:"domino", password:"Do3Wn67Rt", attempts:{}},
+  {username:"duke", password:"Du9Kx25Mv", attempts:{}},
+  {username:"empire", password:"Em5Qp84Ln", attempts:{}},
+  {username:"explorer", password:"Ex2Vz39Kt", attempts:{}},
+  {username:"fighter", password:"Fi8Lm71Qw", attempts:{}},
+  {username:"galaxy", password:"Ga4Tk26Xp", attempts:{}},
+  {username:"gladiator", password:"Gl7Wp95Mn", attempts:{}},
+  {username:"gravity", password:"Gr1Nx53Lq", attempts:{}},
+  {username:"hawk", password:"Ha9Kz42Rt", attempts:{}},
+  {username:"horizon", password:"Ho5Vm87Xp", attempts:{}},
+  {username:"icefire", password:"Ic3Lp16Qn", attempts:{}},
+  {username:"impact", password:"Im8Wr74Kt", attempts:{}},
+  {username:"ironman", password:"Ir2Xq95Mv", attempts:{}},
+  {username:"jetstar", password:"Je6Nk38Lp", attempts:{}},
+  {username:"kingston", password:"Ki1Vp72Qw", attempts:{}},
+  {username:"lightning", password:"Li9Tm45Rx", attempts:{}},
+  {username:"majestic", password:"Ma4Kp83Ln", attempts:{}},
+  {username:"monster", password:"Mo7Wz21Qt", attempts:{}},
+  {username:"neptune", password:"Ne3Lx96Mv", attempts:{}},
+  {username:"ninja", password:"Ni8Qr54Kp", attempts:{}},
+  {username:"orbit", password:"Or2Vp73Ln", attempts:{}},
+  {username:"patriot", password:"Pa6Tk18Qw", attempts:{}},
+  {username:"pioneer", password:"Pi1Xm85Rt", attempts:{}},
+  {username:"predator", password:"Pr9Lq47Kv", attempts:{}},
+  {username:"proton", password:"Pt4Wn62Mx", attempts:{}},
+  {username:"rapid", password:"Ra7Kx93Lp", attempts:{}},
+  {username:"samurai", password:"Sa3Vp25Qn", attempts:{}},
+  {username:"sniper", password:"Sn8Tm71Rw", attempts:{}},
+  {username:"solaris", password:"So2Qk84Mv", attempts:{}},
+  {username:"spartan", password:"Sp6Ln39Xt", attempts:{}},
+  {username:"striker", password:"St1Wr57Kp", attempts:{}},
+  {username:"summit", password:"Su9Xp26Lm", attempts:{}},
+  {username:"taurus", password:"Ta5Vz91Qw", attempts:{}},
+  {username:"tempest", password:"Te3Kp48Rt", attempts:{}},
+  {username:"trident", password:"Tr8Wm72Ln", attempts:{}},
+  {username:"valiant", password:"Va2Nx35Qk", attempts:{}},
+  {username:"voyager", password:"Vo6Lp97Mx", attempts:{}},
+  {username:"wildfire", password:"Wi1Tk64Rv", attempts:{}},
+  {username:"zenith", password:"Ze9Qx28Lp", attempts:{}}
+];
+
+// ============================================================
+//  সব সেটের ডেটা (Set 1-15 for Unit 1 Chapter 1)
+// ============================================================
+const allSets = {
+  1: {
+    name: 'Set 1',
+    icon: '🧳',
+    topic: 'ভারতে আগত বিদেশি পর্যটক (আল-মাসুদি, আল বিরুনি ও ইবন বতুতা)',
+    questions: [
+      {q: "'আরবের হেরোডোটাস' নামে কে পরিচিত ছিলেন?", opts: ['আল বিরুনি', 'ইবন বতুতা', 'আল-মাসুদি', 'ইবন খোরদাদবা'], ans: 2, exp: 'দশম শতকের প্রথমার্ধে বাগদাদের অধিবাসী মুসলিম পরিব্রাজক, ইতিহাসবিদ ও ভূগোলবিদ আল-মাসুদিকে আরবের হেরোডোটাস বলা হয়।'},
+      {q: 'আল-মাসুদি রচিত মুরুজ-উল-জহাব গ্রন্থে কোন্ প্রতিহার রাজার রাজত্বের বিবরণ পাওয়া যায়?', opts: ['প্রথম ভোজ', 'মহীপাল', 'নাগভট্ট', 'ধর্মপাল'], ans: 1, exp: '৯৪৩ খ্রিস্টাব্দে রচিত তাঁর বিখ্যাত গ্রন্থে প্রতিহাররাজ মহীপালের রাজত্বের বিস্তারিত বিবরণ রয়েছে।'},
+      {q: 'তহকিক্-ই-হিন্দ বা কিতাব-উল-হিন্দ নামক ভারত-বিষয়ক বিশ্বকোষের রচয়িতা কে?', opts: ['আমির খসরু', 'জিয়াউদ্দিন বারনি', 'আল বিরুনি', 'অল মাসুদি'], ans: 2, exp: 'একাদশ শতকের প্রখ্যাত আরব পণ্ডিত আল বিরুনি ১০৩০ খ্রিস্টাব্দে এই বিখ্যাত গ্রন্থটি আরবি ভাষায় রচনা করেন।'},
+      {q: 'আল বিরুনি কার ভারত আক্রমণের সময় তাঁর সহযাত্রী হিসেবে ভারতে এসেছিলেন?', opts: ['মহম্মদ ঘুরি', 'গজনির সুলতান মামুদ', 'তৈমুর লঙ', 'চেঙ্গিজ খাঁ'], ans: 1, exp: '১০১৭ খ্রিস্টাব্দে সুলতান মামুদ খোয়ারিজম রাজ্য দখল করে আল বিরুনিকে যুদ্ধবন্দি হিসেবে নিয়ে আসেন এবং পরে সুলতান মামুদের ভারত আক্রমণকালে তিনি সহযাত্রী হিসেবে ভারতে আসেন।'},
+      {q: 'আল বিরুনির মতে, সমাজে চার বর্ণের নীচে থাকা পেশাভিত্তিক অন্ত্যজ শ্রেণির মানুষের মধ্যে কয়টি শ্রেণি ছিল?', opts: ['পাঁচটি', 'সাতটি', 'আটটি', 'দশটি'], ans: 2, exp: 'আল বিরুনি উল্লেখ করেছেন যে অন্ত্যজ শ্রেণির মধ্যে আটটি শ্রেণি ছিল (যেমন- ধোপা, মুচি, মাঝি, তাঁতি, জেলে, বন্যজন্তু শিকারি, ভোজবাজিকর এবং যারা ঝুড়ি বোনে)।'},
+      {q: 'রেহলা বা কিতাব-ই-রেহলা নামক ভ্রমণবৃত্তান্তের রচয়িতা কে?', opts: ['ইবন বতুতা', 'মার্কো পোলো', 'আবদুর রজ্জাক', 'তাভার্নিয়ে'], ans: 0, exp: 'উত্তর মরক্কোর ট্যান্জিয়ার শহরের অধিবাসী ইবন বতুতা তাঁর ভারত ভ্রমণের অভিজ্ঞতার ওপর ভিত্তি করে সুলতানি যুগের আকর গ্রন্থ রেহলা রচনা করেন।'},
+      {q: 'ইবন বতুতা কোন সুলতানের রাজত্বকালে ভারতে এসেছিলেন?', opts: ['আলাউদ্দিন খলজি', 'ইলতুৎমিস', 'মহম্মদ বিন তুঘলক', 'ফিরোজ শাহ তুঘলক'], ans: 2, exp: 'ইবন বতুতা ১৩৩৩ খ্রিস্টাব্দে সিন্ধুনদ অতিক্রম করে ভারতে প্রবেশ করেন, তখন দিল্লির সিংহাসনে ছিলেন তুঘলক বংশীয় সম্রাট মহম্মদ বিন তুঘলক।'},
+      {q: 'সুলতান মহম্মদ বিন তুঘলক ইবন বতুতাকে দিল্লির কোন্ পদে নিযুক্ত করেছিলেন?', opts: ['প্রধান সেনাপতি', 'প্রধান কাজি', 'উজির', 'মির-বক্সি'], ans: 1, exp: 'সুলতান তাঁর যোগ্যতায় মুগ্ধ হয়ে তাঁকে দিল্লির প্রধান কাজি এবং দাতব্য প্রতিষ্ঠানগুলির অধ্যক্ষ পদে নিয়োগ করেন।'},
+      {q: 'বাংলার অতিরিক্ত বর্ষণ ও স্যাঁতসেঁতে আবহাওয়ার জন্য বাংলাকে দোজখ-পুর-ই-নিয়ামত বা উত্তম জিনিসে পূর্ণ নরক কে বলেছিলেন?', opts: ['আল বিরুনি', 'ইবন বতুতা', 'মার্কো পোলো', 'বাবর'], ans: 1, exp: 'ইবন বতুতা বাংলায় এসে এখানকার মানুষের সুখী জীবনযাত্রা দেখলেও এখানকার অস্বাস্থ্যকর আবহাওয়ার জন্য বাংলাকে এই নামে অভিহিত করেছিলেন।'},
+      {q: 'সুলতানি যুগে কৃষিক্ষেত্রে জলসেচের মাধ্যম হিসেবে জলচক্র বা পারসিয়ান হুইল-এর ব্যবহারের কথা কোন্ পর্যটক উল্লেখ করেছেন?', opts: ['ইবন বতুতা', 'তাভার্নিয়ে', 'নিকোলো কন্টি', 'বার্নিয়ে'], ans: 0, exp: 'ইবন বতুতা বাংলা ও দৌলতাবাদের কৃষিক্ষেত্রে জলসেচের জন্য পশুচালিত জলচক্র ব্যবহারের চাক্ষুষ বিবরণ তাঁর গ্রন্থে দিয়েছেন।'},
+      {q: 'আল বিরুনির প্রকৃত নাম কী ছিল?', opts: ['আবুল হাসান আলি ইবনুল হুসাইন', 'আবু আবদুল্লাহ মহম্মদ', 'আবু রিহান মহম্মদ বিন আহমদ', 'জাঁ বাপ্তিস্ত'], ans: 2, exp: 'আল বিরুনির পুরো নাম ছিল আবু রিহান মহম্মদ বিন আহমদ আল বিরুনি অল খরিজিমি। ইউরোপে তিনি আলি বোরান নামে পরিচিত ছিলেন।'},
+      {q: 'আল বিরুনির মতে, সমকালীন সমাজে বৈশ্য ও শূদ্রদের ক্ষেত্রে কোন্ কাজটি নিষিদ্ধ ছিল, যা করলে তাদের জিভ কেটে নেওয়ার বিধান ছিল?', opts: ['ব্যাবসাবাণিজ্য করা', 'বেদপাঠ করা', 'অস্ত্রচালনা করা', 'ঘোড়ায় চড়া'], ans: 1, exp: 'হিন্দু সমাজের কঠোরতার বর্ণনা দিতে গিয়ে আল বিরুনি উল্লেখ করেছেন যে, বৈশ্য ও শূদ্রদের বেদপাঠ কঠোরভাবে নিষিদ্ধ ছিল এবং এই অপরাধে জিভ কেটে নেওয়া হত।'},
+      {q: 'কোন্ পর্যটক হিন্দু সমাজ সম্পর্কে বলেছিলেন যে, ইতিহাস বাদে তাঁদের সব আছে, তাঁরা সাল, তারিখ ও ঘটনার পরম্পরা সম্পর্কে উদাসীন?', opts: ['বার্নিয়ে', 'আবদুর রজ্জাক', 'আল বিরুনি', 'মার্কো পোলো'], ans: 2, exp: 'আল বিরুনি হিন্দুদের জ্ঞানবিজ্ঞানের প্রশংসা করলেও তাঁদের ইতিহাসবোধের অভাব নিয়ে সমালোচনা করে এই মন্তব্যটি করেছিলেন।'},
+      {q: 'ইবন বতুতা কাকে দিল্লির শ্রেষ্ঠ সুলতানদের অন্যতম বলে তাঁর গ্রন্থে উল্লেখ করেছেন?', opts: ['গিয়াসউদ্দিন বলবন', 'কুতুবউদ্দিন আইবক', 'আলাউদ্দিন খলজি', 'ফিরোজ তুঘলক'], ans: 2, exp: 'ইবন বতুতা দীর্ঘদিন ভারতে অবস্থানকালে বহু সুলতান ও তাঁদের কার্যকলাপ বিশ্লেষণ করে আলাউদ্দিন খলজিকে দিল্লির অন্যতম শ্রেষ্ঠ সুলতান বলেছেন।'},
+      {q: 'ইবন বতুতার জন্ম কোন্ শহরে হয়েছিল?', opts: ['ট্যান্জিয়ার', 'বাগদাদ', 'সমরখন্দ', 'ভেনিস'], ans: 0, exp: '১৩০৪ খ্রিস্টাব্দে উত্তর মরক্কোর বিখ্যাত ট্যান্জিয়ার শহরে ইবন বতুতা জন্মগ্রহণ করেন।'}
+    ]
+  },
+  2: {
+    name: 'Set 2',
+    icon: '🗺️',
+    topic: 'বিদেশি পর্যটক পর্ব-২ (মার্কো পোলো, আবদুর রজ্জাক, তাভার্নিয়ে ও বার্নিয়ে)',
+    questions: [
+      {q: 'আধুনিক ভূগোলের মহান পিতা হিসেবে কে পরিচিত ছিলেন?', opts: ['কলম্বাস', 'মার্কো পোলো', 'ভাস্কো-দা-গামা', 'ম্যাগেলান'], ans: 1, exp: 'ইটালির ভেনিস শহরের অধিবাসী মার্কো পোলোকে তাঁর অসামান্য ভ্রমণ ও ভৌগোলিক পর্যবেক্ষণের জন্য আধুনিক ভূগোলের মহান পিতা বলা হয়।'},
+      {q: 'লিভ্রে দেস মারভেলেস দ্যু মন্দে বা বিস্ময়কর পৃথিবীর বর্ণনা নামক বিখ্যাত ভ্রমণকাহিনির রচয়িতা কে?', opts: ['তাভার্নিয়ে', 'নিকোলো কন্টি', 'মার্কো পোলো', 'ইবন বতুতা'], ans: 2, exp: 'চিনের কুবলাই খাঁর দরবার থেকে ফেরার পথে দক্ষিণ ভারতে ভ্রমণ শেষে দেশে ফিরে মার্কো পোলো এই মহামূল্যবান গ্রন্থটি রচনা করেন।'},
+      {q: 'মার্কো পোলোর বিবরণ অনুযায়ী, দক্ষিণ ভারতের কোন্ অঞ্চল হিরের জন্য বিখ্যাত ছিল?', opts: ['মালাবার', 'গোলকুন্ডা', 'করোমণ্ডল', 'সুরাট'], ans: 1, exp: 'মার্কো পোলো তাঁর বর্ণনায় সুস্পষ্টভাবে উল্লেখ করেছেন যে, গোলকুন্ডা সে যুগে হিরের জন্য বিশ্ববিখ্যাত ছিল।'},
+      {q: 'মাতলা-উস-সাদেইন ওয়া মাজমা-উল্ বাহরেইন গ্রন্থটি কার লেখা?', opts: ['আবদুর রজ্জাক', 'আমির খসরু', 'হাসান নিজামি', 'জিয়াউদ্দিন বারনি'], ans: 0, exp: 'পারসিক রাষ্ট্রদূত আবদুর রজ্জাক ফারসি ভাষায় এই বিবরণীটি রচনা করেন, যেখানে বিজয়নগরের বাস্তব চিত্র ফুটে উঠেছে।'},
+      {q: 'আবদুর রজ্জাক বিজয়নগরের কোন্ রাজার আমলে সেখানে পৌঁছান?', opts: ['প্রথম হরিহর', 'কৃষ্ণদেব রায়', 'দ্বিতীয় দেবরায়', 'সদাশিব রায়'], ans: 2, exp: 'হিরাটের শাসক শাহরুখের দূত হিসেবে আবদুর রজ্জাক ১৪৪৩ খ্রিস্টাব্দে সঙ্গম বংশীয় রাজা দ্বিতীয় দেবরায়ের আমন্ত্রণে বিজয়নগরে পৌঁছান।'},
+      {q: 'বিজয়নগরে তিনশোটি সমুদ্র বন্দর ছিল—এই তথ্যটি কোন্ পর্যটকের বিবরণ থেকে জানা যায়?', opts: ['ডোমিঙ্গো পায়েজ', 'ফার্নাও নুনিজ', 'নিকোলো কন্টি', 'আবদুর রজ্জাক'], ans: 3, exp: 'বিজয়নগরের উন্নত বহির্বাণিজ্য ও সামুদ্রিক বাণিজ্যের প্রসারের কথা বলতে গিয়ে আবদুর রজ্জাক তিনশোটি সমুদ্র বন্দরের কথা উল্লেখ করেছেন।'},
+      {q: 'ফরাসি পর্যটক জাঁ বাপ্তিস্ত তাভার্নিয়ে পেশায় কী ছিলেন?', opts: ['চিকিৎসক', 'জহুরি', 'সৈনিক', 'রাজদূত'], ans: 1, exp: 'তাভার্নিয়ে ছিলেন একজন খ্যাতনামা জহুরি। হিরে-মণিমাণিক্য কেনাবেচার কাজেই তিনি ইউরোপ, আফ্রিকা ও এশিয়া মহাদেশের বিভিন্ন দেশে ভ্রমণ করেন।'},
+      {q: 'তাভার্নিয়ের বর্ণনায় কোন্ অঞ্চলের মসলিন রপ্তানির কথা বিস্তারিতভাবে বলা হয়েছে?', opts: ['সুরাট ও আগ্রা', 'বুরহানপুর ও ঢাকা', 'গোলকুন্ডা ও বিজাপুর', 'মালব ও কনৌজ'], ans: 1, exp: 'তাভার্নিয়ে বলেছেন মুঘল আমলে বুরহানপুর ও তার সন্নিহিত অঞ্চলে তৈরি মসলিন পারস্য, তুরস্ক প্রভৃতি দেশে রপ্তানি হত এবং ঢাকা শহরেও সুক্ষ্ম মসলিনের কথা তিনি উল্লেখ করেছেন।'},
+      {q: 'কোন্ ফরাসি পর্যটক চিকিৎসক হিসেবে ভারতে আসেন এবং ভয়েজেস (Voyages) নামক ভ্রমণ বৃত্তান্ত রচনা করেন?', opts: ['তাভার্নিয়ে', 'ফ্রাঁসোয়া বার্নিয়ে', 'পেলসার্ট', 'টমাস রো'], ans: 1, exp: 'বার্নিয়ে ১৬৫৮ খ্রিস্টাব্দে ভারতে আসেন। পেশায় চিকিৎসক ও দার্শনিক বার্নিয়ে দেশে ফিরে তাঁর ভ্রমণ বৃত্তান্ত ভয়েজেস রচনা করেন।'},
+      {q: 'ফ্রাঁসোয়া বার্নিয়ে কার রাজত্বকালে ভারতে এসেছিলেন?', opts: ['বাবর ও হুমায়ুন', 'আকবর ও জাহাঙ্গির', 'শাহজাহান ও ঔরঙ্গজেব', 'ইলতুৎমিস ও বলবন'], ans: 2, exp: 'তিনি যখন ভারতে আসেন তখন শাহজাহান অসুস্থ এবং তাঁর পুত্রদের (দারা ও ঔরঙ্গজেব) মধ্যে সিংহাসন নিয়ে যুদ্ধ চলছে। তিনি এই রাজনৈতিক সংঘর্ষ চাক্ষুষ করেন।'},
+      {q: 'বার্নিয়ের মতে, মুঘল ভারতে জমির প্রকৃত মালিক কে ছিলেন?', opts: ['কৃষকরা', 'জমিদাররা', 'মনসবদাররা', 'সম্রাট'], ans: 3, exp: 'বার্নিয়ের পর্যবেক্ষণ অনুযায়ী, ভারতের সব জমির মালিক ছিলেন স্বয়ং সম্রাট এবং কারোর কোনো ব্যক্তিগত সম্পত্তি ছিল না।'},
+      {q: 'বার্নিয়ের মতে, দিল্লির সমাজে মূলত কয়টি শ্রেণির মানুষ বাস করত?', opts: ['দুটি (ধনী ও দরিদ্র)', 'তিনটি (উচ্চ, মধ্য ও নিম্ন)', 'চারটি (বর্ণাশ্রম অনুযায়ী)', 'পাঁচটি'], ans: 0, exp: 'বার্নিয়ে লিখেছেন যে, দিল্লিতে কোনো মধ্যবিত্ত শ্রেণি ছিল না। সেখানে কেবল দুটি শ্রেণির মানুষ বাস করত- অত্যন্ত ধনী আমির-ওমরাহ এবং কঠোর দারিদ্র্যের মধ্যে বাস করা দরিদ্র ভৃত্য ও শ্রমিকরা।'},
+      {q: 'কোন্ পর্যটককে পরবর্তীকালে পর্যটকদের যুবরাজ (Prince of Travellers) বলে অভিহিত করা হয়?', opts: ['ইবন বতুতা', 'মার্কো পোলো', 'ফ্রাঁসোয়া বার্নিয়ে', 'তাভার্নিয়ে'], ans: 2, exp: 'পরবর্তীকালের ফরাসি পর্যটক কাউন্ট অব মোদাভ বার্নিয়ের সুক্ষ্ম পর্যবেক্ষণ ও বিশ্লেষণ ক্ষমতার জন্য তাঁকে পর্যটকদের যুবরাজ বলে অভিহিত করেছেন।'},
+      {q: 'তাভার্নিয়ে গোলকুন্ডার কোন্ কোন্ স্থানে হিরের খনি দেখেছিলেন?', opts: ['রামল্লাকোট ও কোল্লুর', 'পোটোসি ও গোয়া', 'সুরাট ও কালিকট', 'বুরহানপুর ও সিরঞ্জ'], ans: 0, exp: 'একজন প্রখ্যাত জহুরি হিসেবে তাভার্নিয়ে ভারতে এসে গোলকুন্ডার রামল্লাকোট ও কোল্লুরে অবস্থিত বিখ্যাত হিরের খনিগুলি পরিদর্শন করেন।'},
+      {q: 'বার্নিয়ের বর্ণনায় মুঘল যুগের কোন্ স্থাপত্যের অসামান্য বিবরণ পাওয়া যায়?', opts: ['কুতুব মিনার', 'আগ্রার তাজমহল ও সেকেন্দ্রাবাদে আকবরের স্মৃতিসৌধ', 'লালকেল্লা', 'ফতেহপুর সিক্রি'], ans: 1, exp: 'বার্নিয়ে তাঁর ভ্রমণকাহিনিতে সমকালীন এই দুই সুবিখ্যাত মুঘল স্থাপত্যের অসাধারণ বর্ণনা দিয়েছেন।'}
+    ]
+  },
+  3: {
+    name: 'Set 3',
+    icon: '⚔️',
+    topic: 'শাসনতান্ত্রিক কাঠামো (দৈবস্বত্ব, প্রশাসন ও সামরিক ব্যবস্থা)',
+    questions: [
+      {q: 'পাল রাজারা নিজেদের মর্যাদা বৃদ্ধির জন্য মূলত কী উপাধি ধারণ করতেন?', opts: ['জিলিল্লাহ', 'পরমেশ্বর, পরমভট্টারক, মহারাজাধিরাজ', 'অরিরাজমর্দনশঙ্কর', 'চোলমার্তণ্ড'], ans: 1, exp: 'প্রাচীন ভারতে পাল রাজারা নিজেদের ঈশ্বরের অবতার হিসেবে প্রতিষ্ঠা করতে এবং অপ্রতিহত ক্ষমতা বোঝাতে এই বিশাল উপাধিগুলি ধারণ করতেন।'},
+      {q: 'চোল যুগে রাজার বিশ্বস্ত পরামর্শদাতাকে কী বলা হত?', opts: ['রাজগুরু', 'মহামন্ত্রী', 'মহাদণ্ডনায়ক', 'ভুক্তিপতি'], ans: 0, exp: 'চোল রাজসভায় রাজগুরু উপস্থিত থাকতেন। তিনি শুধু আধ্যাত্মিক ব্যাপারেই নয়, প্রশাসনিক ও রাজনৈতিক ব্যাপারেও রাজাকে পরামর্শ দিতেন।'},
+      {q: 'কোন্ দিল্লির সুলতান নিজেকে নায়েবৎ-ই-খুদাই বা ঈশ্বরের প্রতিনিধি বলে ঘোষণা করেছিলেন?', opts: ['কুতুবউদ্দিন আইবক', 'ইলতুৎমিস', 'গিয়াসউদ্দিন বলবন', 'আলাউদ্দিন খলজি'], ans: 2, exp: 'সুলতানি যুগে দৈবস্বত্বে বিশ্বাসী গিয়াসউদ্দিন বলবন নিজেকে নায়েবৎ-ই-খুদাই ঘোষণা করেন এবং জিলিল্লাহ (ঈশ্বরের ছায়া) উপাধি নেন।'},
+      {q: 'সুলতানি যুগে রাজসভায় সিজদা ও পাইবস প্রথা কে প্রবর্তন করেন?', opts: ['ইলতুৎমিস', 'গিয়াসউদ্দিন বলবন', 'মহম্মদ বিন তুঘলক', 'ফিরোজ শাহ তুঘলক'], ans: 1, exp: 'রাজকীয় মর্যাদা বৃদ্ধি এবং ঐশ্বরিক অধিকার প্রমাণের জন্য বলবন সিংহাসনের সামনে নতজানু হওয়া (সিজদা) এবং পদযুগল চুম্বন করা (পাইবস) প্রবর্তন করেন।'},
+      {q: 'পাল আমলে শাসনব্যবস্থার সর্বনিম্ন স্তর গ্রাম-এর প্রধানকে কী বলা হত?', opts: ['বিষয়পতি', 'ভুক্তিপতি', 'দাশ-গ্রামিক', 'গ্রামপতি'], ans: 3, exp: 'পাল সাম্রাজ্য ভুক্তি, বিষয়, মণ্ডলে বিভক্ত ছিল এবং সর্বনিম্ন স্তর ছিল গ্রাম, যার প্রধানকে বলা হত গ্রামপতি।'},
+      {q: 'সুলতানি আমলে সবচেয়ে গুরুত্বপূর্ণ মন্ত্রী ওয়াজির মূলত কোন্ দায়িত্ব পালন করতেন?', opts: ['গুপ্তচর বিভাগের প্রধান', 'রাজস্ব ও সামরিক বিভাগ', 'ধর্মীয় বিষয় ও বিচার', 'পূর্ত বিভাগ'], ans: 1, exp: 'ওয়াজির ছিলেন প্রধানমন্ত্রী, তাঁর স্থান ছিল সুলতানের পরেই এবং তিনি মূলত রাজস্ব ও সামরিক বিভাগের কাজকর্ম পরিচালনা করতেন।'},
+      {q: 'মুঘল প্রশাসনে মুহতসিব নামক কর্মচারীর প্রধান কাজ কী ছিল?', opts: ['বিচারকার্য পরিচালনা করা', 'রাজপ্রাসাদ দেখাশোনা করা', 'জনসাধারণের মধ্যে ধর্ম ও নৈতিকতা প্রচার করা', 'সামরিক অভিযান পরিচালনা করা'], ans: 2, exp: 'মুঘল প্রশাসনে জনসাধারণের মধ্যে ইসলামি ধর্ম ও নৈতিক আচার-আচরণ বজায় আছে কি না, তা দেখার দায়িত্ব ছিল মুহতসিবের।'},
+      {q: 'চোল শাসনাধীনে সমগ্র চোল সাম্রাজ্যকে কী বলা হত?', opts: ['নাডু', 'কোট্টম', 'চোলমণ্ডলম', 'কুররম'], ans: 2, exp: 'সমগ্র সাম্রাজ্যকে বলা হত চোলমণ্ডলম, যা পরে প্রদেশ (মণ্ডলম), জেলা (কোট্টম) এবং গ্রামে (কুররম) বিভক্ত ছিল।'},
+      {q: 'সুলতানি শাসনে ইকতা ব্যবস্থার অধীনে থাকা শাসনকর্তাদের কী বলা হত?', opts: ['শিকদার', 'মাকতি বা ইকতাদার', 'আমিল', 'সুবাদার'], ans: 1, exp: 'ত্রয়োদশ শতকে সুলতানি সাম্রাজ্য ইকতা নামক সামরিক অঞ্চলে বিভক্ত ছিল এবং এর দায়িত্বপ্রাপ্ত সেনাপতিদের ইকতাদার বা মাকতি বলা হত।'},
+      {q: 'মুঘল আমলে সামরিক ও বেসামরিক শাসনব্যবস্থার মূল ভিত্তি ছিল মনসবদারি ব্যবস্থা, এর প্রবর্তক কে ছিলেন?', opts: ['বাবর', 'হুমায়ুন', 'আকবর', 'ঔরঙ্গজেব'], ans: 2, exp: 'পূর্ববর্তী জায়গিরদারি প্রথার ত্রুটি দূর করতে আকবর মুঘল প্রশাসনে এই অভিনব মনসবদারি ব্যবস্থার প্রবর্তন করেন।'},
+      {q: 'চোল যুগে ব্রাহ্মণদের বসবাসকারী গ্রামের সাধারণ সভাকে কী বলা হত?', opts: ['উর', 'সভা বা মহাসভা', 'নাডু', 'নগরতার'], ans: 1, exp: 'চোলদের স্থানীয় স্বায়ত্তশাসনে ব্রাহ্মণদের গ্রামের সমিতিকে সভা বা মহাসভা বলা হত, আর সাধারণ গ্রামের সভাকে বলা হত উর।'},
+      {q: 'পাল সেনাবাহিনীতে পদাতিক বাহিনীর অধ্যক্ষকে কী বলা হত?', opts: ['বলাধ্যক্ষ', 'নৌকাধ্যক্ষ', 'মহাপিলুপতি', 'কোট্টপাল'], ans: 0, exp: 'পাল সেনাবাহিনীতে পদাতিক বাহিনীর প্রধান ছিলেন বলাধ্যক্ষ, এবং নৌবাহিনীর প্রধান ছিলেন নৌকাধ্যক্ষ বা নাবাধ্যক্ষ।'},
+      {q: 'সুলতানি যুগে সামরিক বিভাগ বা দেওয়ান-ই-আর্জ-এর প্রধানকে কী বলা হত?', opts: ['কাজি-উল্-কাজাৎ', 'সদর-উস্-সুদুর', 'আরিজ-ই-মামালিক', 'বারিদ-ই-মামালিক'], ans: 2, exp: 'সুলতানি যুগে গিয়াসউদ্দিন বলবন প্রতিষ্ঠিত সামরিক দফতর দেওয়ান-ই-আর্জ-এর প্রধান ছিলেন আরিজ-ই-মামালিক।'},
+      {q: 'ভারতের ইতিহাসে কোন্ শাসক প্রথম সেনাবাহিনীতে ঘোড়া চিহ্নিতকরণ (দাগ) এবং সৈন্যের বিবরণ (হুলিয়া) লিপিবদ্ধ করার ব্যবস্থা করেন?', opts: ['ইলতুৎমিস', 'আলাউদ্দিন খলজি', 'ফিরোজ তুঘলক', 'বাবর'], ans: 1, exp: 'সেনাবাহিনীতে দুর্নীতি দমন এবং একটি স্থায়ী ও সুদক্ষ বাহিনী গঠনের জন্য আলাউদ্দিন খলজি দাগ ও হুলিয়া প্রথার প্রবর্তন করেন।'},
+      {q: 'মুঘল সেনাবাহিনীতে দারোগা-ই-তোপখানা বা মির আতিশ কিসের প্রধান ছিলেন?', opts: ['পদাতিক বাহিনী', 'নৌবাহিনী', 'গোলন্দাজ বাহিনী', 'গুপ্তচর বিভাগ'], ans: 2, exp: 'মুঘল সেনাবাহিনীতে গোলন্দাজ বাহিনীর গুরুত্ব অপরিসীম ছিল এবং এই বাহিনীর প্রধান ছিলেন মির আতিশ।'}
+    ]
+  },
+  4: {
+    name: 'Set 4',
+    icon: '🌾',
+    topic: 'অর্থনৈতিক জীবন (কৃষি, শিল্প ও বাণিজ্য)',
+    questions: [
+      {q: 'প্রাচীন ও আদি মধ্যযুগে ব্রাহ্মণ বা পুরোহিত, বৌদ্ধ মঠ ও ধর্মপ্রতিষ্ঠানকে নিষ্কর ভূমিদানের প্রথাকে কী বলা হত?', opts: ['ইকতা ব্যবস্থা', 'মনসবদারি প্রথা', 'অগ্রহার ব্যবস্থা', 'জায়গির প্রথা'], ans: 2, exp: 'সাতবাহন যুগ থেকে শুরু হওয়া এই ব্যবস্থার মাধ্যমে ব্রাহ্মণ বা ধর্মীয় প্রতিষ্ঠানকে নিষ্কর জমি (যেমন- ব্রহ্মদেয়, দেবদান) দান করা হত।'},
+      {q: 'একাদশ ও দ্বাদশ শতকে রচিত কৃষিপরাশর গ্রন্থটির রচয়িতা কে?', opts: ['ঋষি কশ্যপ', 'ঋষি পরাশর', 'হলায়ুধ', 'বরাহমিহির'], ans: 1, exp: 'এই গ্রন্থটি থেকে সেযুগের ভারতের কৃষিসংক্রান্ত নানা তথ্য, শস্য, বীজ ও বর্ষণ সম্পর্কে বিস্তারিত জানা যায়।'},
+      {q: 'প্রাচীনকালে কৃষিক্ষেত্রে সেচব্যবস্থার কাজে ব্যবহৃত অরঘট্ট কী ধরনের যন্ত্র ছিল?', opts: ['লাঙল', 'ঘটিযন্ত্র বা জল তোলার চাকাযন্ত্র', 'আখ-মাড়াই যন্ত্র', 'বীজ বপন যন্ত্র'], ans: 1, exp: 'এটি একটি চক্রাকার কাঠামো, যার গায়ে ঘটি লাগানো থাকত, মানুষ বা পশুর সাহায্যে এটি ঘুরিয়ে কুপ বা নদী থেকে জল তোলা হত।'},
+      {q: 'সুলতানি আমলে ইবন বতুতা বাংলা ও দৌলতাবাদের কৃষিক্ষেত্রে জলসেচের জন্য কোন্ যন্ত্রের ব্যবহার দেখেছিলেন?', opts: ['অরঘট্ট', 'জলচক্র বা পারসিয়ান হুইল', 'উদঘাটক', 'হস্তযন্ত্র'], ans: 1, exp: 'সুলতানি যুগে আমদানি হওয়া এই যন্ত্রের মাধ্যমে পশুর (বলদ বা ঘোড়া) সাহায্যে চাকা ঘুরিয়ে অনেক সহজে প্রচুর পরিমাণ জল তোলার ব্যবস্থা করা হয়।'},
+      {q: 'প্রাচীন ভারতে শিল্প ও বাণিজ্যের বিভিন্ন শাখায় নিযুক্ত ব্যক্তিরা নিজেদের স্বার্থ সংরক্ষণের উদ্দেশ্যে যে পেশাদারি সংগঠন গড়ে তুলেছিল, তাকে কী বলা হত?', opts: ['ইকতা', 'গিল্ড বা শ্রেণি', 'মণ্ডপিকা', 'হট্ট'], ans: 1, exp: 'গিল্ড বা শ্রেণি ছিল প্রাচীন ভারতের বণিক ও শিল্পীদের পেশাদারি সংগঠন, যা সমাজ ও রাষ্ট্রীয় জীবনে গুরুত্বপূর্ণ ভূমিকা পালন করত।'},
+      {q: 'মুঘল যুগে সম্রাট আকবরের আমলে কে ১৫৮২ খ্রিস্টাব্দে রাজস্ব সংগ্রহের নতুন ব্যবস্থা জাবতি প্রবর্তন করেন?', opts: ['আবুল ফজল', 'মানসিংহ', 'রাজা টোডরমল', 'বীরবল'], ans: 2, exp: 'আকবরের অর্থমন্ত্রী রাজা টোডরমল জমি জরিপ করে উৎপাদিকা শক্তির ভিত্তিতে জাবতি বা দহসালা নামক নতুন রাজস্ব ব্যবস্থার প্রবর্তন করেন।'},
+      {q: 'সুলতানি আমলে উৎপাদিত মিহি সুতোর কাপড় বা বস্ত্রকে কী বলা হত?', opts: ['কামিনা', 'কিরপাস', 'মসলিন বা বাফতা', 'ক্যালিকো'], ans: 2, exp: 'সুলতানি যুগে মোটা কাপড়কে কামিনা, মাঝারি কাপড়কে কিরপাস এবং সুক্ষ্ম বা মিহি কাপড়কে মসলিন বা বাফতা বলা হত।'},
+      {q: 'মুঘল আমলে কোন্ ফসলটির চাষ ভারতে প্রথম শুরু হয়েছিল?', opts: ['নীল', 'পাট', 'আখ', 'তুলো'], ans: 1, exp: 'শিল্পের জন্য কাঁচামাল হিসেবে মুঘল যুগেই ভারতে সর্বপ্রথম পাটের চাষ শুরু হয় বলে ঐতিহাসিক তথ্য থেকে জানা যায়।'},
+      {q: 'উত্তর ভারতের সম্বর হ্রদ থেকে মূলত কোন্ খনিজ দ্রব্য উৎপাদিত হত?', opts: ['লোহা', 'তামা', 'লবণ', 'সোনা'], ans: 2, exp: 'সুলতানি ও মুঘল উভয় আমলেই খনিজ উৎপাদনের ক্ষেত্রে উত্তর ভারতের সম্বর হ্রদ লবণ উৎপাদনের জন্য বিখ্যাত ছিল।'},
+      {q: 'সুলতানি যুগে মুসলিমদের ওপর আরোপিত ধর্মকরকে কী বলা হত?', opts: ['জিজিয়া', 'খামস্', 'জাকাৎ', 'যাকাত'], ans: 2, exp: 'সুলতানি যুগে আয়ের প্রধান উৎসগুলির মধ্যে জাকাৎ ছিল অন্যতম, যা কেবল মুসলিমদের ওপরই আরোপিত একটি ধর্মকর ছিল।'},
+      {q: 'দক্ষিণ ভারতে দশম থেকে ত্রয়োদশ শতকের মধ্যে মণিগ্রামম ও নানাদেশী বলতে কাদের বোঝানো হত?', opts: ['কৃষকদের সংগঠন', 'বণিক সংগঠন', 'পুরোহিতদের সভা', 'সামরিক ইউনিট'], ans: 1, exp: 'এই দুটি ছিল সেযুগের অত্যন্ত শক্তিশালী বণিক সংগঠন, যারা দূরদেশ থেকে মূল্যবান পণ্য আমদানি করত এবং এদের নিজস্ব সেনাবাহিনীও ছিল।'},
+      {q: 'মুঘল যুগে দেহাৎ-ই-তালুক বলতে কী বোঝাত?', opts: ['যেসব বড়ো গ্রাম জমিদারের মাধ্যমে রাষ্ট্রকে রাজস্ব দিত', 'যেসব গ্রাম সরাসরি রাষ্ট্রকে রাজস্ব দিত', 'নিষ্কর জমি', 'সামরিক ঘাঁটি'], ans: 0, exp: 'মুঘল গ্রামীণ সমাজ দু-ভাগে বিভক্ত ছিল—দেহাৎ-ই-তালুক (জমিদারের মাধ্যমে রাজস্ব প্রদানকারী) এবং দেহাৎ-ই-রায়তি (সরাসরি রাজস্ব প্রদানকারী)।'},
+      {q: 'মুঘল আমলে কোন্ অঞ্চলের লোহা অত্যন্ত উন্নতমানের বলে পরিচিত ছিল?', opts: ['সুরাট', 'গোলকুন্ডা', 'কাশ্মীর', 'সিন্ধু'], ans: 1, exp: 'মুঘল আমলে খনিজ উৎপাদনে ভারত দুর্বল হলেও গোলকুন্ডার লোহা এবং হিরে ছিল বিশ্ববিখ্যাত ও অত্যন্ত উন্নতমানের।'},
+      {q: 'কলহনের রাজতরঙ্গিনী থেকে কোন্ অঞ্চলে জাফরান চাষের কথা জানা যায়?', opts: ['গুজরাট', 'মালব', 'কাশ্মীর', 'বাংলা'], ans: 2, exp: 'প্রাচীন গ্রন্থ রাজতরঙ্গিনী-তে দ্বাদশ শতকে কাশ্মীরে মূল্যবান মসলা জাফরান চাষের সুস্পষ্ট উল্লেখ রয়েছে।'},
+      {q: 'প্রাচীন বাংলায় উৎপাদিত শস্যের এক-ষষ্ঠাংশ কর হিসেবে নেওয়া হত, একে কী বলা হত?', opts: ['ভোগ', 'হিরণ্য', 'উপরিকর', 'ভাগ'], ans: 3, exp: 'পাল যুগের লিপি অনুযায়ী পাঁচ রকম করের মধ্যে উৎপাদিত শস্যের এক-ষষ্ঠাংশকে ভাগ বলা হত, যা আদায় করতেন ষষ্ঠ অধিকৃত নামক কর্মচারী।'}
+    ]
+  },
+  5: {
+    name: 'Set 5',
+    icon: '🏛️',
+    topic: 'সমাজ, ধর্ম, সাহিত্য ও স্থাপত্য (দশম থেকে সপ্তদশ শতক)',
+    questions: [
+      {q: 'সেন যুগে দানসাগর ও অদ্ভুতসাগর গ্রন্থ দুটি কে রচনা করেন?', opts: ['বিজয়সেন', 'বল্লালসেন', 'লক্ষ্মণসেন', 'সামন্তসেন'], ans: 1, exp: 'সেন বংশের রাজা বল্লালসেন হিন্দু আচারপদ্ধতি ও জ্যোতিষশাস্ত্র নিয়ে এই দুটি বিখ্যাত সংস্কৃত গ্রন্থ রচনা করেছিলেন।'},
+      {q: 'লক্ষ্মণসেনের রাজসভার বিখ্যাত কবি জয়দেব কোন্ গ্রন্থটি রচনা করেন?', opts: ['পবনদূত', 'আর্যাসপ্তশতী', 'গীতগোবিন্দ', 'ব্রাহ্মণসর্বস্ব'], ans: 2, exp: 'সেন যুগে লক্ষ্মণসেনের রাজসভা অলংকৃত করতেন কবি জয়দেব, যাঁর রচিত ভক্তিমূলক কাব্য গীতগোবিন্দ সংস্কৃত সাহিত্যের অমূল্য সম্পদ।'},
+      {q: 'দক্ষিণ ভারতে দ্রাবিড় রীতির শ্রেষ্ঠ নিদর্শন তাঞ্জোরের বৃহদীশ্বর মন্দির (বা রাজরাজেশ্বর মন্দির) কে নির্মাণ করেছিলেন?', opts: ['প্রথম পরান্তক', 'রাজরাজ চোল', 'রাজেন্দ্র চোল', 'বিজয়ালয়'], ans: 1, exp: '১০০৩ থেকে ১০১০ খ্রিস্টাব্দের মধ্যে নির্মিত এই সুবিশাল ও উচ্চতম শিবমন্দিরটি চোল স্থাপত্যের তথা দ্রাবিড় রীতির শ্রেষ্ঠ নিদর্শন।'},
+      {q: 'সুলতানি যুগের শ্রেষ্ঠ ফারসি সাহিত্যিক কাকে হিন্দুস্তানের তোতাপাখি বলা হয়?', opts: ['জিয়াউদ্দিন বারনি', 'মিনহাজউদ্দিন সিরাজ', 'আমির খসরু', 'ইসামি'], ans: 2, exp: 'গদ্য, পদ্য ও গীতিকাব্যের রচয়িতা হিসেবে অসামান্য প্রতিভার জন্য আমির খসরুকে হিন্দুস্তানের তোতাপাখি বলা হত।'},
+      {q: 'তাজ-উল-মাসির গ্রন্থটির রচয়িতা কে?', opts: ['হাসান নিজামি', 'মিনহাজ-উস্-সিরাজ', 'অলবেরুনি', 'আমির খসরু'], ans: 0, exp: 'এই ইতিহাস গ্রন্থটিতে মহম্মদ ঘুরির রাজ্যজয় থেকে শুরু করে ইলতুৎমিসের রাজত্বকাল পর্যন্ত সময়ের বিশদ বিবরণ পাওয়া যায়।'},
+      {q: 'তারিখ-ই-ফিরোজশাহি গ্রন্থটি কোন্ ঐতিহাসিক রচনা করেছেন?', opts: ['বদাউনি', 'জিয়াউদ্দিন বারনি', 'আবুল ফজল', 'গুলবদন বেগম'], ans: 1, exp: 'গিয়াসউদ্দিন বলবনের রাজত্বকাল থেকে ফিরোজ শাহের রাজত্বকাল পর্যন্ত সুলতানি ইতিহাসের অত্যন্ত প্রামাণ্য গ্রন্থ এটি।'},
+      {q: 'পাহাড়পুরে অবস্থিত বিখ্যাত সোমপুর মহাবিহার কোন্ যুগে নির্মিত হয়েছিল?', opts: ['গুপ্ত যুগে', 'পাল যুগে', 'সেন যুগে', 'মুঘল যুগে'], ans: 1, exp: 'ধর্মপালের পরিকল্পনায় নির্মিত এই বিশাল পাঁচতলা মন্দিরযুক্ত বৌদ্ধ বিহারটি পাল যুগের স্থাপত্যের অন্যতম শ্রেষ্ঠ নিদর্শন।'},
+      {q: 'বাবরের আত্মজীবনী তুজুক-ই-বাবরি কোন্ ভাষায় রচিত হয়েছিল?', opts: ['আরবি', 'ফারসি', 'তুর্কি', 'উর্দু'], ans: 2, exp: 'সম্রাট বাবর নিজে একজন সুলেখক ছিলেন এবং তাঁর এই আত্মজীবনীটি তুর্কি সাহিত্যের তথা বিশ্বসাহিত্যের এক অমূল্য গ্রন্থ।'},
+      {q: 'সুলতানি আমলে কুতুব মিনার-এর নির্মাণকাজ কে শুরু করেছিলেন?', opts: ['ইলতুৎমিস', 'কুতুবউদ্দিন আইবক', 'গিয়াসউদ্দিন বলবন', 'ফিরোজ তুঘলক'], ans: 1, exp: '১১৯৯ খ্রিস্টাব্দে বিখ্যাত সুফিসন্ত কুতুবউদ্দিন বখতিয়ার কাকির স্মৃতিরক্ষার্থে কুতুবউদ্দিন আইবক এটি শুরু করেন এবং পরে ইলতুৎমিস তা সমাপ্ত করেন।'},
+      {q: 'আলাই দরওয়াজা কোন্ সুলতানের রাজত্বকালে নির্মিত হয়?', opts: ['কুতুবউদ্দিন আইবক', 'জালালউদ্দিন খলজি', 'আলাউদ্দিন খলজি', 'মহম্মদ বিন তুঘলক'], ans: 2, exp: 'খিলান ও সুক্ষ্মাতিসুক্ষ্ম কারুকার্যে ভরা এই সৌধটি আলাউদ্দিন খলজির আমলে নির্মিত, যা ভারতীয় ও মুসলিম শিল্পরীতির এক শ্রেষ্ঠ নিদর্শন।'},
+      {q: 'বাংলার পাণ্ডুয়ায় বিখ্যাত আদিনা মসজিদ কে নির্মাণ করেছিলেন?', opts: ['ইলিয়াস শাহ', 'সিকান্দার শাহ', 'গিয়াসউদ্দিন আজম শাহ', 'আলাউদ্দিন হোসেন শাহ'], ans: 1, exp: '১৩৬৯ খ্রিস্টাব্দে নির্মিত আদিনা মসজিদটি আয়তনের দিক থেকে ভারতবর্ষের দ্বিতীয় বৃহত্তম মসজিদ এবং এটি সিকান্দার শাহের স্থাপত্য প্রীতির প্রমাণ।'},
+      {q: 'মুঘল যুগের বিখ্যাত তাজমহল কার আমলে নির্মিত হয়েছিল?', opts: ['বাবর', 'আকবর', 'জাহাঙ্গির', 'শাহজাহান'], ans: 3, exp: 'মুঘল স্থাপত্যরীতির চরম উৎকর্ষ দেখা যায় শাহজাহানের আমলে, এবং বিশ্ববন্দিত তাজমহল তাঁর আমলেরই শ্রেষ্ঠ শিল্পকীর্তি।'},
+      {q: 'পাল যুগের বিখ্যাত দুজন ভাস্কর ও চিত্রশিল্পীর নাম কী ছিল?', opts: ['বীতপাল ও ধীমান', 'শূলপাণি ও কর্ণভদ্র', 'দাশওয়ান্ত ও তারাচাঁদ', 'মির সৈয়দ আলি ও খাজা আব্বাস'], ans: 0, exp: 'পিতা ও পুত্র বীতপাল এবং ধীমান ছিলেন পাল যুগের অত্যন্ত প্রতিভাবান ভাস্কর ও চিত্রশিল্পী, যাঁরা ধাতুশিল্পেও পারদর্শী ছিলেন।'},
+      {q: 'কোন্ চোল রাজা গঙ্গাইকোণ্ডচোলপুরম-এ নতুন রাজধানী ও বিশালাকার শিবমন্দির নির্মাণ করেন?', opts: ['রাজরাজ চোল', 'রাজেন্দ্র চোল', 'বিজয়ালয়', 'প্রথম কুলোতুঙ্গ'], ans: 1, exp: '১০২৫ খ্রিস্টাব্দে রাজেন্দ্র চোল এই বিশাল মন্দিরটি নির্মাণ করেন, যা তাঞ্জোরের মন্দিরের মতোই সুক্ষ্ম কারুকার্য ও জাঁকজমকপূর্ণ ছিল।'},
+      {q: 'হিন্দি ভাষায় রামচরিত মানস কে রচনা করেন?', opts: ['কবির', 'তুলসীদাস', 'সুরদাস', 'চাঁদ বরদৈ'], ans: 1, exp: 'আকবরের আমলে শ্রেষ্ঠ হিন্দি কবি তুলসীদাস এই অসামান্য গ্রন্থটি রচনা করেন, যা হিন্দি সাহিত্যের চরম বিকাশ নির্দেশ করে।'}
+    ]
+  },
+  6: {
+    name: 'Set 6',
+    icon: '🏢',
+    topic: 'শাসনতান্ত্রিক কাঠামো (কেন্দ্রীয় ও প্রাদেশিক প্রশাসন)',
+    questions: [
+      {q: 'সেন যুগে হিসাবরক্ষা বিভাগের সর্বময় কর্তাকে কী বলা হত?', opts: ['মহাদণ্ডনায়ক', 'মহাক্ষপটলিক', 'মহাসন্ধিবিগ্রহিক', 'মহাপ্রতিহার'], ans: 1, exp: 'পাল ও সেন যুগে রাষ্ট্রের আয়-ব্যয় অর্থাৎ হিসাবরক্ষা বিভাগের সর্বময় কর্তা ছিলেন মহাক্ষপটলিক।'},
+      {q: 'পাল যুগে মহাসন্ধিবিগ্রহিক নামক পদস্থ রাজকর্মচারী কোন্ বিভাগের প্রধান ছিলেন?', opts: ['হিসাবরক্ষা বিভাগ', 'বিচার বিভাগ', 'যুদ্ধ ও শান্তি (পররাষ্ট্র) বিভাগ', 'জেলা প্রশাসন'], ans: 2, exp: 'পাল শাসনব্যবস্থায় যুদ্ধ ও শান্তি অর্থাৎ পররাষ্ট্র বিভাগের প্রধানকে মহাসন্ধিবিগ্রহিক বলা হত।'},
+      {q: 'চোল শাসনব্যবস্থায় উচ্চপদস্থ কর্মচারীদের কী বলা হত?', opts: ['সিরুদনম', 'পেরুনদনম', 'কর্মিঙ্গল', 'পনিমক্কল'], ans: 1, exp: 'চোল আমলের সুদক্ষ কর্মচারীমণ্ডলীতে দুটি শ্রেণি ছিল— পেরুনদনম বা উচ্চপদস্থ কর্মচারী এবং সিরুদনম বা নিম্নপদস্থ কর্মচারী।'},
+      {q: 'সুলতানি যুগে দলিলপত্র সংরক্ষণের দায়িত্বপ্রাপ্ত দফতরটির নাম কী ছিল?', opts: ['দেওয়ান-ই-আর্জ', 'দেওয়ান-ই-রিসালৎ', 'বারিদ-ই-মামালিক', 'দেওয়ান-ই-ইনসা'], ans: 3, exp: 'সুলতানি প্রশাসনে বিভিন্ন গুরুত্বপূর্ণ দফতরের মধ্যে দেওয়ান-ই-ইনসার দায়িত্ব ছিল রাজকীয় দলিলপত্র সংরক্ষণ করা।'},
+      {q: 'মুঘল প্রশাসনে সম্রাটের গৃহ পরিচালনার দায়িত্ব কার ওপর ন্যস্ত ছিল?', opts: ['মির বক্সি', 'মির সামান', 'মুহতসিব', 'সদর-উস্-সুদুর'], ans: 1, exp: 'মুঘল প্রশাসনে গুরুত্বপূর্ণ মন্ত্রীদের মধ্যে মির সামান ছিলেন স্বয়ং সম্রাটের গৃহ পরিচালনার ভারপ্রাপ্ত অধিকারী।'},
+      {q: 'সুলতানি যুগে অভিজাত ও দায়িত্বশীল কর্মীদের সভাকে কী বলা হত, যা জরুরি অবস্থায় সুলতানকে পরামর্শ দিত?', opts: ['মজলিস-ই-খলওয়াত', 'বার-ই-খাস', 'দেওয়ান-ই-ইমারত', 'চিরাগ-ই-দিল্লি'], ans: 1, exp: 'সুলতানি যুগে মন্ত্রীসভা না থাকলেও উচ্চ অভিজাত ও দায়িত্বশীল কর্মীদের সভা বার-ই-খাস জরুরি অবস্থায় সুলতানকে পরামর্শ দিয়ে সাহায্য করত।'},
+      {q: 'মুঘল যুগে প্রদেশের সকল সামরিক ও বেসামরিক ক্ষমতার অধিকারী কে ছিলেন?', opts: ['মির বক্সি', 'শিকদার', 'সুবাদার বা নাজিম', 'কাজি-উল-কাজাৎ'], ans: 2, exp: 'মুঘল প্রদেশ বা সুবা-র প্রধান ছিলেন সুবাদার, নাজিম বা সিপাহসালার, যিনি প্রদেশের সকল সামরিক ও বেসামরিক ক্ষমতার অধিকারী ছিলেন।'},
+      {q: 'চোল সাম্রাজ্যে মণ্ডলম্ বা প্রদেশগুলি কোন্ বিভাগে বিভক্ত ছিল?', opts: ['নাডু', 'কোট্টম', 'কুররম', 'বিষয়'], ans: 1, exp: 'সমগ্র চোল সাম্রাজ্য মণ্ডলম বা প্রদেশে এবং প্রদেশগুলি কোট্টম বা জেলায় বিভক্ত ছিল।'},
+      {q: 'মুঘল যুগে জেলার প্রধান শাসনকর্তাকে কী বলা হত?', opts: ['ফৌজদার', 'শিকদার', 'অমাত্য', 'সুবাদার'], ans: 0, exp: 'মুঘল প্রদেশগুলি সরকার বা জেলায় বিভক্ত ছিল এবং জেলার প্রধান শাসককে ফৌজদার বলা হত।'},
+      {q: 'রাষ্ট্রকূট শাসনব্যবস্থায় গ্রামপ্রধানকে শাসন পরিচালনায় সাহায্যকারী বয়োজ্যেষ্ঠদের সভাকে কী বলা হত?', opts: ['মহাসভা', 'গ্রাম মহাজন বা গ্রাম মহত্তর', 'উর', 'নগরতার'], ans: 1, exp: 'রাষ্ট্রকূটদের সময়ে গ্রামের শাসনভার ন্যস্ত ছিল গ্রাম-প্রধানের ওপর এবং তাঁকে সাহায্য করত গ্রাম মহাজন বা গ্রাম মহত্তর নামে বয়োজ্যেষ্ঠদের একটি সভা।'},
+      {q: 'চোল যুগে স্থানীয় স্বায়ত্তশাসনে সাধারণ গ্রামের সভাকে কী বলা হত?', opts: ['সভা', 'মহাসভা', 'উর', 'মণ্ডপিকা'], ans: 2, exp: 'চোল যুগে ব্রাহ্মণদের গ্রামের সমিতিকে সভা বা মহাসভা বলা হত, আর গ্রামের সকল প্রাপ্তবয়স্ক মানুষ নিয়ে গঠিত সাধারণ সভাকে উর বলা হত।'},
+      {q: 'পাল শাসনব্যবস্থায় মহাকুমারামাত্য কাদের বলা হত?', opts: ['বিচারবিভাগের প্রধানকে', 'জেলা শাসকদের কর্তাকে', 'হিসাবরক্ষককে', 'গুপ্তচরদের'], ans: 1, exp: 'পাল আমলে বেশ কিছু উচ্চপদস্থ কর্মচারীর মধ্যে মহাকুমারামাত্য ছিলেন জেলা শাসকদের কর্তা।'},
+      {q: 'মুঘল যুগে গ্রামের প্রধান বা মুখিয়াকে কী বলা হত?', opts: ['পাটোয়ারি', 'মুকাদ্দম', 'চৌকিদার', 'দেওয়ান'], ans: 1, exp: 'মুঘল যুগে গ্রামের শাসন পরিচালনা করত গ্রাম পঞ্চায়েত এবং গ্রামের প্রধান বা মুখিয়াকে বলা হত মুকাদ্দম।'},
+      {q: 'সুলতানি যুগে পূর্ত বিভাগের নাম কী ছিল?', opts: ['দেওয়ান-ই-ইমারত', 'বারিদ-ই-মামালিক', 'দেওয়ান-ই-রিসালৎ', 'দেওয়ান-ই-আর্জ'], ans: 0, exp: 'সুলতানি যুগে নির্মাণ ও পূর্ত সংক্রান্ত কাজকর্ম দেখাশোনার জন্য দেওয়ান-ই-ইমারত নামক দফতর ছিল।'},
+      {q: 'আলাউদ্দিন খলজির আমলে প্রদেশগুলিকে কয়েকটি শিক-এ ভাগ করা হত, এই শিক-এর প্রধান কে ছিলেন?', opts: ['ইকতাদার', 'শিকদার', 'আমিল', 'মাকতি'], ans: 1, exp: 'আলাউদ্দিন খলজির আমলে প্রদেশগুলি কয়েকটি শিক বা জেলায় বিভক্ত ছিল এবং এর প্রধানকে বলা হত শিকদার।'}
+    ]
+  },
+  7: {
+    name: 'Set 7',
+    icon: '💰',
+    topic: 'রাজস্ব, সামরিক ও বিচার ব্যবস্থা',
+    questions: [
+      {q: 'পাল যুগে খেয়া পারাপার সংক্রান্ত কর আদায়কারী কর্মচারীকে কী বলা হত?', opts: ['ষষ্ঠ অধিকৃত', 'ভোগপতি', 'ক্ষেত্রপ', 'তরিক'], ans: 3, exp: 'পাল যুগের লিপি থেকে জানা যায় যে, খেয়া পারাপার সংক্রান্ত কর আদায়কারী কর্মচারীকে তরিক বলা হত।'},
+      {q: 'রাষ্ট্রকূটদের যুগে ভূমিকর বা উৎপন্ন শস্যের এক-চতুর্থাংশকে কী বলা হত?', opts: ['হিরণ্য', 'উপরিকর', 'ভোগক', 'ভাগ'], ans: 2, exp: 'রাষ্ট্রকূট শাসনে উৎপন্ন শস্যের এক-চতুর্থাংশ ভূমিকর হিসেবে নেওয়া হত, একে ভোগক বলা হত।'},
+      {q: 'সুলতানি যুগে যুদ্ধে লুণ্ঠিত সম্পদের ওপর যে কর নেওয়া হত, তাকে কী বলা হত?', opts: ['জাকাৎ', 'খামস্', 'জিজিয়া', 'সোরা কর'], ans: 1, exp: 'সুলতানি আমলে আয়ের প্রধান ছটি উৎসের মধ্যে খামস্ ছিল অন্যতম, যা যুদ্ধে লুণ্ঠিত সম্পদের ওপর আরোপিত কর।'},
+      {q: 'মুঘল সম্রাট আকবরের আমলে গল্লাবক্স বা বাতাই প্রথা মূলত কোন্ অঞ্চলে প্রচলিত ছিল?', opts: ['বাংলা ও বিহারে', 'এলাহাবাদ ও মালবে', 'সিন্ধুদেশ, কাশ্মীর, কান্দাহার ও কাবুলে', 'কাথিয়াবাড় ও গুজরাটে'], ans: 2, exp: 'টোডরমলের রাজস্ব ব্যবস্থার একটি রূপ গল্লাবক্স বা বাতাই প্রথা সিন্ধুদেশ, কাশ্মীর, কান্দাহার ও কাবুলের কিছু অংশে প্রচলিত ছিল।'},
+      {q: 'সেন যুগে পদাতিক বাহিনীর প্রধানকে বলা হত বলাধ্যক্ষ, হস্তীবিভাগের প্রধানকে কী বলা হত?', opts: ['মহাপিলুপতি', 'মহাবলাধিকরণিক', 'মহাব্যূহপতি', 'কোট্টপাল'], ans: 0, exp: 'সেন যুগে সামরিক বিভাগের অন্যতম গুরুত্বপূর্ণ পদ ছিল মহাপিলুপতি, যিনি হস্তীবিভাগের প্রধান ছিলেন।'},
+      {q: 'রাজপুত যুগে সেনাদলের খাদ্য সরবরাহ, বাসস্থান, পোশাক-পরিচ্ছদ ইত্যাদির ভারপ্রাপ্ত কর্মচারীদের কী বলা হত?', opts: ['প্রান্তপাল', 'ভাণ্ডাগারিক', 'মহাগণস্থ', 'কোট্টপাল'], ans: 1, exp: 'রাজপুত সেনাবাহিনীতে ভাণ্ডাগারিক নামক কর্মচারীরা সেনাদলের খাদ্য, বাসস্থান ও আনুষঙ্গিক বিষয়ের ভারপ্রাপ্ত ছিলেন।'},
+      {q: 'আল-মাসুদির বর্ণনা অনুযায়ী, কোন্ প্রতিহার রাজার সেনাবাহিনীর প্রত্যেক ডিভিশনে সাত থেকে নয় লক্ষ সেনা ছিল?', opts: ['নাগভট্ট', 'প্রথম ভোজ', 'মহীপাল', 'দ্বিতীয় চন্দ্রগুপ্ত'], ans: 2, exp: 'আরব পর্যটক আল-মাসুদির রচনা থেকে জানা যায় যে, প্রতিহাররাজ মহীপালের সেনাবাহিনীর প্রত্যেক ডিভিশনে সাত থেকে নয় লক্ষ সেনা ছিল।'},
+      {q: 'সুলতানি যুগে কাজি-উল্-কাজাৎ কী দায়িত্ব পালন করতেন?', opts: ['সামরিক প্রধানের', 'রাজস্ব আদায়ের', 'প্রধান কাজি বা প্রধান বিচারকের', 'গুপ্তচর বিভাগের'], ans: 2, exp: 'সুলতানের পরেই বিচারবিভাগের সর্বোচ্চ কর্মচারী ছিলেন প্রধান কাজি বা কাজি-উল্-কাজাৎ, যিনি আপিলের বিচার করতেন।'},
+      {q: 'পাল যুগের বিচারব্যবস্থায় দশপ্রকার অপরাধের বিচারকারী কর্মচারীদের কী বলা হত?', opts: ['মহাদণ্ডনায়ক', 'দণ্ডনায়ক', 'দশপরাধিক', 'প্রমাতৃ'], ans: 2, exp: 'পাল যুগে স্থানীয় প্রশাসকদের অধীনে দশপরাধিক নামক কর্মচারীরা দশপ্রকার অপরাধের বিচার করতেন।'},
+      {q: 'চোল যুগে রাজকীয় আদালত কী নামে পরিচিত ছিল?', opts: ['কণ্টকশোধন', 'ধর্মাসন', 'ধর্মস্থীয়', 'ন্যায়ালয়'], ans: 1, exp: 'চোল আমলে বিচারের কাজ স্থানীয়ভাবে পরিচালিত হলেও রাজকীয় আদালতকে বলা হত ধর্মাসন।'},
+      {q: 'মুঘল যুগে বিচারকার্য মূলত কীসের ভিত্তিতে পরিচালিত হত?', opts: ['মনুস্মৃতির ভিত্তিতে', 'কোরানের নির্দেশ ও ইসলামি রীতিনীতির ওপর', 'গ্রিক আইনের ওপর', 'সুলতানের নিজস্ব ইচ্ছা অনুসারে'], ans: 1, exp: 'মুঘল যুগে কোনো লিখিত আইন না থাকায় কোরানের নির্দেশ ও ইসলামি রীতিনীতির ওপর নির্ভর করেই বিচারকার্য পরিচালিত হত।'},
+      {q: 'কোন সুলতান দণ্ডবিধির কঠোরতা হ্রাস করার চেষ্টা করেছিলেন?', opts: ['গিয়াসউদ্দিন বলবন', 'আলাউদ্দিন খলজি', 'ফিরোজ তুঘলক', 'মহম্মদ বিন তুঘলক'], ans: 2, exp: 'সুলতানি যুগে দণ্ডবিধি কঠোর এবং অঙ্গচ্ছেদ সাধারণ প্রথা হলেও ফিরোজ তুঘলক দণ্ডবিধির কঠোরতা হ্রাস করার চেষ্টা করেছিলেন।'},
+      {q: 'সুলতানি আমলে ইকতা প্রথার অধীনে ইকতাদারদের মাঝে মাঝে বদলি করা হত কেন?', opts: ['দক্ষতা বৃদ্ধির জন্য', 'সামন্ততান্ত্রিক প্রবণতা প্রতিহত করার জন্য', 'তাদের পদোন্নতির জন্য', 'কৃষকদের সুবিধা দেওয়ার জন্য'], ans: 1, exp: 'ইকতা প্রথায় সামন্ততান্ত্রিক প্রবণতা রুখতে রাষ্ট্র যেসব ব্যবস্থা নিত, তার মধ্যে অন্যতম ছিল মাকতি বা ইকতাদারদের মাঝে মাঝে বদলি করা।'},
+      {q: 'আকবরের পূর্বে মুঘল প্রশাসনে সামরিক ও বেসামরিক সকল উচ্চপদস্থ কর্মচারীকে বেতনের পরিবর্তে কী দেওয়া হত?', opts: ['নগদ অর্থ', 'নিষ্কর ভূমি', 'জায়গির', 'মনসব'], ans: 2, exp: 'আকবরের পূর্বে সামরিক ও বেসামরিক সকল উচ্চপদস্থ কর্মচারীকে বেতনের পরিবর্তে জায়গির দেওয়া হত, যা পরে মনসবদারি প্রথায় পরিবর্তিত হয়।'},
+      {q: 'আকবরের রাজস্বমন্ত্রী টোডরমল প্রবর্তিত নাক্স প্রথা কোন্ কোন্ স্থানে প্রচলিত ছিল?', opts: ['এলাহাবাদ ও মালবে', 'সিন্ধুদেশ ও কাশ্মীরে', 'কাথিয়াবাড়, গুজরাট ও বাংলা দেশে', 'রাজপুতানা ও লাহোরে'], ans: 2, exp: 'টোডরমলের রাজস্ব সংগ্রহ পদ্ধতির মধ্যে অন্যতম নাক্স প্রথা কাথিয়াবাড়, গুজরাট ও বাংলা দেশে চালু ছিল।'}
+    ]
+  },
+  8: {
+    name: 'Set 8',
+    icon: '🏪',
+    topic: 'দশম থেকে দ্বাদশ শতকের অর্থনীতি, সমাজ ও বাণিজ্য',
+    questions: [
+      {q: 'খ্রিস্টীয় পঞ্চম শতকে রোম সাম্রাজ্যের পতনের পর গিল্ডগুলি দুর্বল হয়ে পড়লে দক্ষিণ ভারতে কোন্ নামে স্থানীয় বাণিজ্যকেন্দ্রের উল্লেখ পাওয়া যায়?', opts: ['মণ্ডপিকা', 'নগরম্', 'হট্টিকা', 'অড্ড'], ans: 1, exp: 'গিল্ডগুলি দুর্বল হয়ে পড়ার পর দক্ষিণ ভারতে নগরম্ নামে স্থানীয় বাণিজ্যকেন্দ্রের উল্লেখ পাওয়া যায়, গবেষক কেনেথ হল ৩৩টি নগরমের উল্লেখ করেছেন।'},
+      {q: 'উত্তর ভারতে খ্রিস্টীয় অষ্টম থেকে ত্রয়োদশ শতকের মধ্যে গঠিত আচ্ছাদিত বাণিজ্যকেন্দ্রগুলিকে কী বলা হত?', opts: ['হট্ট', 'মণ্ডপিকা', 'পেন্টা', 'যাত্রা'], ans: 1, exp: 'উত্তর ভারতের বিভিন্ন স্থানে হাটের চেয়ে বড়ো এবং সম্ভবত স্তম্ভযুক্ত আচ্ছাদিত এলাকাগুলিকে মণ্ডপিকা বলা হত।'},
+      {q: 'পদ্মপুরাণ থেকে প্রাচীন বাংলায় কত রকমের ধানের চাষ হত বলে জানা যায়?', opts: ['দশ রকমের', 'কুড়ি রকমের', 'ত্রিশ রকমের', 'অন্তত পঞ্চাশ রকমের'], ans: 3, exp: 'প্রাচীন কৃষি অর্থনীতি সম্পর্কে পদ্মপুরাণ থেকে জানা যায় যে, বাংলায় অন্তত পঞ্চাশ রকমের ধানের চাষ হত।'},
+      {q: 'দ্বাদশ শতকের গ্রন্থ মানসোল্লাস-এ কোন্ কোন্ বস্ত্রশিল্পের কেন্দ্রের উল্লেখ আছে?', opts: ['ঢাকা ও বারাণসী', 'মুলতান, গুজরাটের আনহিলবার ও তাঞ্জোর', 'সুরাট ও আগ্রা', 'কালিকট ও কোচিন'], ans: 1, exp: 'মানসোল্লাস গ্রন্থে সে যুগের উল্লেখযোগ্য বস্ত্রশিল্পের কেন্দ্র হিসেবে মুলতান, গুজরাটের আনহিলবার এবং তাঞ্জোর বা নাগপটনের উল্লেখ রয়েছে।'},
+      {q: 'খ্রিস্টীয় দশম শতকে লেখা কামসূত্রের টীকা জয়মঙ্গলা-তে তৈল নিষ্কাশনের জন্য কোন্ দুটি যন্ত্রের উল্লেখ আছে?', opts: ['অরঘট্ট ও ঘটিযন্ত্র', 'ঔদ্র ও চক্রিক', 'হস্তযন্ত্র ও পীড়নযন্ত্র', 'লাঙল ও নিড়ানি'], ans: 1, exp: 'জয়মঙ্গলা টীকায় তৈল নিষ্কাশনের জন্য ঔদ্র এবং ঘানি জাতীয় চক্রিক নামক দুটি যন্ত্রের উল্লেখ আছে।'},
+      {q: 'একাদশ শতকের লেখক ক্ষেমেন্দ্রর নীতিকল্পতরু-তে কৃষকদের কী বলে উল্লেখ করা হয়েছে?', opts: ['আশ্রিতহালিক', 'বদ্ধমূল', 'লাঙলোপজীবী', 'দাশ-গ্রামিক'], ans: 0, exp: 'কৃষকদের নিজস্ব জমির মালিকানা না থাকা এবং স্বাধীন অস্তিত্বের অভাব বোঝাতে ক্ষেমেন্দ্রর গ্রন্থে তাদের আশ্রিতহালিক বলা হয়েছে।'},
+      {q: 'প্রাচীন ভারতের গিল্ড বা বণিক সংঘ থেকে মালপত্র বহনের জন্য বলদ, গর্দভ ইত্যাদি ব্যবহৃত হলে স্থলবাণিজ্যে কোন্ পথকর আদায় করা হত?', opts: ['স্বন্দক', 'মার্গনক', 'তরিক', 'হিরণ্য'], ans: 1, exp: 'স্থলবাণিজ্যে ভ্রাম্যমাণ বণিকদের কাছ থেকে পথকর হিসেবে মার্গনক আদায় করা হত।'},
+      {q: 'আরব পর্যটক আল-মাসুদির বিবরণ অনুযায়ী কোঙ্কনের কোন্ বন্দরে দশ হাজার মুসলিম বণিকের স্থায়ী বসতি ছিল?', opts: ['সোপারা', 'গোয়া', 'চোল বন্দরে', 'কুইনল'], ans: 2, exp: 'আল-মাসুদির বিবরণ থেকে জানা যায় যে কোঙ্কনের চোল বন্দরে দশ হাজার মুসলিম বণিকের স্থায়ী বসতি ছিল।'},
+      {q: 'চোল রাজা প্রথম কুলোতুঙ্গ বিদেশি বণিকদের তাঁর রাজ্যে ব্যবসায়ে উৎসাহ দেবার জন্য কী সুবিধা দিতেন?', opts: ['বিনামূল্যে জমি দিতেন', 'শুল্কে ছাড় দিতেন', 'সেনাবাহিনী দিতেন', 'বিনামূল্যে পণ্য দিতেন'], ans: 1, exp: 'চোল রাজা প্রথম কুলোতুঙ্গ বাণিজ্যের গুরুত্ব বুঝতেন বলে বিদেশি বণিকদের ব্যবসায়ে উৎসাহ দেবার জন্য শুল্কে ছাড় দিতেন।'},
+      {q: 'আল বিরুনির মতে, সমাজে ব্রাহ্মণদের সেবা করা কাদের প্রধান কাজ ছিল?', opts: ['বৈশ্যদের', 'ক্ষত্রিয়দের', 'শূদ্রদের', 'অন্ত্যজদের'], ans: 2, exp: 'আল বিরুনি তাঁর গ্রন্থে উল্লেখ করেছেন যে, সামাজিক শ্রেণিবিন্যাসে শূদ্ররা ছিল চতুর্থ স্থানে এবং তাদের কাজ ছিল ব্রাহ্মণদের সেবা করা।'},
+      {q: 'সেন যুগে কোন্ হিন্দু প্রথার ফলে নারীসমাজের অবস্থা অত্যন্ত শোচনীয় হয়ে পড়েছিল, যেখানে পুরুষদের একাধিক স্ত্রী গ্রহণের অধিকার ছিল?', opts: ['স্বয়ম্বর প্রথা', 'দেবদাসী প্রথা', 'কৌলিন্য প্রথা', 'জৌহর ব্রত'], ans: 2, exp: 'সেন যুগে অন্যান্য প্রথার পাশাপাশি কৌলিন্য প্রথা, বহুবিবাহ প্রভৃতির কারণে নারীসমাজের অবস্থা অত্যন্ত অবহেলিত ও শোচনীয় হয়ে পড়ে।'},
+      {q: 'গুর্জর-প্রতিহার এবং পারমার বংশীয় রাজপুত রাজারা কোন্ ধর্মের পৃষ্ঠপোষক ছিলেন?', opts: ['বৌদ্ধ ধর্ম', 'জৈন ধর্ম', 'বৈষ্ণব ধর্ম', 'শৈব ধর্ম'], ans: 1, exp: 'রাজপুত প্রতিহার ও পারমার বংশীয় রাজারা এবং রাষ্ট্রকূট রাজ প্রথম অমোঘবর্ষ জৈনধর্মের পৃষ্ঠপোষক ছিলেন।'},
+      {q: 'শঙ্করাচার্যের পর একাদশ শতকে কোন্ কোন্ দার্শনিক ভক্তিবাদের প্রচার শুরু করেন?', opts: ['কবির ও দাদু', 'নানক ও মীরাবাঈ', 'শ্রীচৈতন্য ও শঙ্করদেব', 'রামানুজ, মাধবাচার্য, রামানন্দ ও বল্লভাচার্য'], ans: 3, exp: 'একাদশ শতকে শঙ্করাচার্যের পর রামানুজ, মাধবাচার্য, রামানন্দ ও বল্লভাচার্য প্রমুখ সাধক ও দার্শনিকেরা ভক্তিবাদের প্রসার ঘটান।'},
+      {q: 'প্রাচীন ভারতের সমাজব্যবস্থায় অন্ত্যজ শ্রেণির নীচে থাকা হাড়ি, ডোম, চণ্ডাল সম্প্রদায়কে আল বিরুনি কী বলে গণ্য করেছেন?', opts: ['শূদ্র', 'জাতিচ্যুত', 'ম্লেচ্ছ', 'আশ্রিত'], ans: 1, exp: 'আল বিরুনির মতে, সমাজের সর্বনিম্ন স্তরে থাকা হাড়ি, ডোম, চণ্ডাল প্রভৃতি সম্প্রদায়কে জাতিচ্যুত বলে গণ্য করা হত।'},
+      {q: 'প্রাচীনকালে ভালো তরবারি তৈরির জন্য কোন্ কোন্ স্থান বিখ্যাত ছিল?', opts: ['বাংলা ও আসাম', 'কাশ্মীর ও সিন্ধু', 'সৌরাষ্ট্র, বারাণসী ও কলিঙ্গ', 'গোলকুন্ডা ও বিজাপুর'], ans: 2, exp: 'একাদশ-দ্বাদশ শতকে ধাতুশিল্পের প্রসারের সময় ভালো তরবারি তৈরির জন্য সৌরাষ্ট্র, বারাণসী ও কলিঙ্গ বিখ্যাত ছিল।'}
+    ]
+  },
+  9: {
+    name: 'Set 9',
+    icon: '🏭',
+    topic: 'সুলতানি ও মুঘল যুগের অর্থনীতি, সমাজ ও বাণিজ্য',
+    questions: [
+      {q: 'সুলতানি যুগে সুতো কাটার ক্ষেত্রে চরকা কোথা থেকে আমদানি করা হয়েছিল, যা বয়নশিল্পে বিরাট পরিবর্তন আনে?', opts: ['চিন থেকে', 'ইরান থেকে', 'ইউরোপ থেকে', 'আরব থেকে'], ans: 1, exp: 'চতুর্দশ শতকে ইরান থেকে চরকার আমদানি হলে বয়নশিল্পে বিরাট পরিবর্তন ঘটে, ফলে একজন কাটুনি ছয়গুণ বেশি সুতো কাটতে পারত।'},
+      {q: 'সুলতানি যুগে মাঝারি সুতোর বস্ত্রের নাম কী ছিল?', opts: ['কামিনা', 'মসলিন', 'কিরপাস বা কালিকো', 'বারিফ'], ans: 2, exp: 'সুলতানি যুগে খুব মোটা সুতিবস্ত্রকে কামিনা, মিহি সুতোর কাপড়কে মসলিন এবং মাঝারি সুতোর বস্ত্রকে কিরপাস বা কালিকো বলা হত।'},
+      {q: 'সুলতানি যুগে কোন স্থান পশম শিল্প, শাল এবং কার্পেট তৈরির জন্য বিশ্ববিখ্যাত ছিল?', opts: ['গুজরাট', 'বাংলা', 'গোলকুন্ডা', 'কাশ্মীর'], ans: 3, exp: 'পশম শিল্প, শাল এবং কার্পেট তৈরির জন্য কাশ্মীর বিখ্যাত ছিল এবং বিদেশের বাজারে এর বিশেষ কদর ছিল।'},
+      {q: 'ইবন বতুতা তাঁর কোন গ্রন্থে সুলতানি আমলের ভারতীয় শস্য, ফল ও ফুলের বিস্তৃত বিবরণ দিয়েছেন?', opts: ['তহকিক-ই-হিন্দ', 'রেহলা (বা কিতাব-ই-রেহলা)', 'বাবরনামা', 'সফরনামা'], ans: 1, exp: 'আফ্রিকার পর্যটক ইবন বতুতা তাঁর ভ্রমণ বৃত্তান্ত রেহলা গ্রন্থে সুলতানি যুগের খরিফ, রবিশস্য, ফল ও ফুলের বিস্তৃত বিবরণ দিয়েছেন।'},
+      {q: 'ফিরোজ তুঘলক দিল্লি ও সন্নিহিত অঞ্চলে কতগুলি ফলের বাগান তৈরি করেছিলেন?', opts: ['একশো ফলের বাগান', 'পাঁচশো ফলের বাগান', 'বারোশো ফলের বাগান', 'দু-হাজার ফলের বাগান'], ans: 2, exp: 'ফলচাষের প্রতি উৎসাহী সুলতান ফিরোজ তুঘলক দিল্লি ও সন্নিহিত অঞ্চলে বারোশো ফলের বাগান তৈরি করেছিলেন।'},
+      {q: 'মুঘল আমলে কোন পর্যটক বলেছেন যে, ভারী শেকলে বেঁধে কৃষকদের বিভিন্ন বাজারে বিক্রির জন্য পাঠানো হত?', opts: ['ফ্রাঁসোয়া বার্নিয়ে', 'তাভার্নিয়ে', 'ইতালীয় পর্যটক মানুচি', 'টমাস রো'], ans: 2, exp: 'ইতালীয় পর্যটক নিকোলাও মানুচি মুঘল যুগের কৃষকদের চরম দুর্দশার কথা বলতে গিয়ে দাস হিসেবে তাদের বিক্রির এই বিবরণ দিয়েছেন।'},
+      {q: 'মুঘল যুগে যে কৃষক নিজের জমি নিজে চাষ করত, তাকে কী বলা হত?', opts: ['শাহিকস্ত', 'খুদকস্ত', 'মুজারিয়ান', 'বলাহার'], ans: 1, exp: 'মুঘল গ্রামীণ সমাজে কৃষকদের বিভিন্ন শ্রেণির মধ্যে যারা নিজেদের জমি নিজেরাই চাষ করত তাদের খুদকস্ত বলা হত।'},
+      {q: 'মুঘল যুগে ভাড়াটিয়া কৃষকদের কী বলা হত যারা উৎপন্ন ফসলের কিছুটা মালিককে দিয়ে বাকিটা নিজেদের কাছে রাখত?', opts: ['মুজারিয়ান', 'বলাহার', 'শাহিকস্ত', 'খুদকস্ত'], ans: 0, exp: 'মুজারিয়ান নামধারী কৃষকরা ছিল ভাড়াটিয়া কৃষক, যারা উৎপন্ন ফসলের একটা অংশ জমির মালিককে দিত।'},
+      {q: 'কোন মুঘল সম্রাট তাঁর নিজস্ব কারখানায় নানা ধরনের পশমি বস্ত্র, শাল, গালিচা ও কম্বল তৈরির ব্যবস্থা করেছিলেন?', opts: ['বাবর', 'হুমায়ুন', 'আকবর', 'শাহজাহান'], ans: 2, exp: 'আবুল ফজল-এর রচনা থেকে জানা যায় যে, আকবর নিজের কারখানায় নানা ধরনের পশমি বস্ত্র, শাল, গালিচা ও কম্বল তৈরির ব্যবস্থা করেন।'},
+      {q: 'মুঘল যুগে কোন্ ফরাসি পর্যটক সরকারি কারখানাগুলির বিস্তারিত বর্ণনা দিয়েছেন, যেখানে সুচিশিল্পী, স্বর্ণকার ও চিত্রশিল্পীরা কাজ করতেন?', opts: ['তাভার্নিয়ে', 'ফ্রাঁসোয়া বার্নিয়ে', 'পেলসার্ট', 'বারবোসা'], ans: 1, exp: 'ফরাসি পর্যটক ফ্রাঁসোয়া বার্নিয়ে তাঁর বর্ণনায় মুঘল যুগের সরকারি কারখানা বা বড়ো হলঘরগুলির স্পষ্ট চিত্র তুলে ধরেছেন।'},
+      {q: 'মুঘল যুগে সমুদ্র বাণিজ্যে নিয়োজিত অধিকাংশ বণিকই কোন্ সম্প্রদায়ের ছিল?', opts: ['ইরানি মুসলিম', 'গুজরাটি মুসলিম', 'আফগান', 'পারসি'], ans: 1, exp: 'মুঘল যুগে সমুদ্র বাণিজ্যে হিন্দু, জৈন ও পারসি বণিকদের অস্তিত্ব থাকলেও অধিকাংশ বণিকই ছিল গুজরাটি মুসলিম।'},
+      {q: 'সুলতানি যুগে মুসলিম সমাজের বুদ্ধিজীবী শ্রেণিতে মূলত কারা ছিলেন?', opts: ['সৈন্য ও সেনাপতিরা', 'কৃষক ও শ্রমিকরা', 'বিদেশি অ-তুর্কিরা (প্রশাসন, শিক্ষা ও ধর্মে নিযুক্ত)', 'ভারতীয় ধর্মান্তরিত মুসলিমরা'], ans: 2, exp: 'সুলতানি যুগে মুসলিম সমাজ দুটি শ্রেণিতে বিভক্ত ছিল—সৈনিক শ্রেণি এবং বিদেশি অ-তুর্কিদের নিয়ে গঠিত বুদ্ধিজীবী শ্রেণি, যার মধ্যে উলেমারা ছিলেন প্রভাবশালী।'},
+      {q: 'কোন সুলতান সর্বপ্রথম ভারতীয় মুসলিমদের শাসনকার্যে উঁচু পদে নিয়োগ করেছিলেন?', opts: ['ইলতুৎমিস', 'গিয়াসউদ্দিন বলবন', 'আলাউদ্দিন খলজি', 'ফিরোজ তুঘলক'], ans: 2, exp: 'সুলতানি শাসনের প্রথমদিকে ভারতীয় মুসলিমদের উচ্চপদে নিয়োগ করা না হলেও আলাউদ্দিন খলজিই প্রথম তাদের উঁচুপদে নিয়োগ করেন।'},
+      {q: 'মুঘল অভিজাতদের সম্পত্তির ক্ষেত্রে মুঘল আইন কী ছিল, যার জন্য তারা টাকা জমানোর চেয়ে খরচ করতে বেশি আগ্রহী ছিল?', opts: ['আয়ের অর্ধেক কর দিতে হত', 'মৃত্যুর পর সম্পত্তি সরকার বাজেয়াপ্ত করত', 'সব সম্পত্তি মন্দিরে দান করতে হত', 'সম্পত্তি বিদেশে পাঠাতে হত'], ans: 1, exp: 'মুঘল আইন অনুসারে কোনো অভিজাতব্যক্তির মৃত্যুর পর পিতার সম্পত্তি উত্তরাধিকারীরা পেত না, সরকার তা বাজেয়াপ্ত করত।'},
+      {q: 'কোন মুঘল সম্রাট সুলহ-ই-কুল আদর্শের প্রবক্তা ছিলেন এবং হিন্দু-মুসলিম সমন্বয়ে জোর দিয়েছিলেন?', opts: ['বাবর', 'শাহজাহান', 'আকবর', 'ঔরঙ্গজেব'], ans: 2, exp: 'সুলহ-ই-কুল আদর্শের প্রবক্তা আকবর ধর্মীয় উদারতার মাধ্যমে হিন্দু-মুসলিম সমন্বয় সাধনে সচেষ্ট ছিলেন।'}
+    ]
+  },
+  10: {
+    name: 'Set 10',
+    icon: '📖',
+    topic: 'সাহিত্য, শিল্প ও স্থাপত্যের বিকাশ (দশম থেকে সপ্তদশ শতক)',
+    questions: [
+      {q: 'পাল যুগে দায়ভাগ, ব্যবহার মাতৃকা এবং কালবিবেক গ্রন্থ তিনটি কে রচনা করেন?', opts: ['জীমূতবাহন', 'ভবদেব ভট্ট', 'শ্রীধরভট্ট', 'সন্ধ্যাকর নন্দী'], ans: 0, exp: 'জীমূতবাহন ছিলেন বঙ্গদেশীয় ধর্মশাস্ত্র শাখার প্রতিষ্ঠাতা, তিনি উত্তরাধিকার, বিচারপদ্ধতি ও ধর্মীয় অনুষ্ঠান বিষয়ে এই তিনটি গ্রন্থ রচনা করেন।'},
+      {q: 'পাল যুগের কোন পণ্ডিত অদ্বৈত দর্শন, আয়ুর্বেদ, গণিত ও জ্যোতিষশাস্ত্রে পারদর্শিতার জন্য দ্বিতীয় বরাহ নামে পরিচিত ছিলেন?', opts: ['মাধবকার', 'চক্রপাণি দত্ত', 'ভবদেব ভট্ট', 'হলায়ুধ'], ans: 2, exp: 'ভবদেব ভট্ট জ্যোতির্বিদ্যা ও জ্যোতিষশাস্ত্রে এত পাণ্ডিত্য অর্জন করেছিলেন যে তাঁকে দ্বিতীয় বরাহ বলে অভিহিত করা হত।'},
+      {q: 'সেন যুগের রাজা বল্লালসেনের গুরু অনিরুদ্ধ হিন্দু অশৌচ ও শ্রাদ্ধাদি সম্পর্কে কোন্ দুটি গ্রন্থ রচনা করেছিলেন?', opts: ['হারলতা ও পিতৃদয়িত', 'ব্রাহ্মণসর্বস্ব ও মীমাংসাসর্বস্ব', 'দানসাগর ও অদ্ভুতসাগর', 'আচারসাগর ও ব্রতসাগর'], ans: 0, exp: 'বল্লালসেনের গুরু অনিরুদ্ধ হিন্দু অশৌচ ও শ্রাদ্ধাদি নিয়মাবলি নিয়ে হারলতা ও পিতৃদয়িত নামে দুটি বিখ্যাত গ্রন্থ রচনা করেছিলেন।'},
+      {q: 'রাষ্ট্রকূট রাজ তৃতীয় কৃষ্ণের রাজত্বকালে ছন্দপ্রকরণের ওপর মৃতসঞ্জীবনী ও কবিরহস্য গ্রন্থ কে রচনা করেন?', opts: ['ত্রিবিক্রম', 'হলায়ুধ', 'পম্প', 'রন্ন'], ans: 1, exp: 'দশম শতকে রাষ্ট্রকূট রাজ তৃতীয় কৃষ্ণের রাজত্বকালে হলায়ুধ কবিরহস্য, অভিধানরত্নমালা এবং মৃতসঞ্জীবনী গ্রন্থগুলি রচনা করেন।'},
+      {q: 'চোল যুগে তামিল সাহিত্যের জনক হিসেবে কে পরিচিত, যিনি তামিল ভাষায় রামায়ণ রচনা করেন?', opts: ['বুদ্ধমিত্র', 'কলুবেলি', 'কম্বন', 'তিককানা'], ans: 2, exp: 'তামিল সাহিত্যের জনক কম্বন চোল যুগে তামিল ভাষায় রামায়ণ (রামায়ণম) রচনা করেন।'},
+      {q: 'পাল যুগের বৌদ্ধতান্ত্রিক লেখকদের মধ্যে সর্বশ্রেষ্ঠ দীপঙ্কর শ্রীজ্ঞান কতগুলি গ্রন্থের প্রণেতা ছিলেন?', opts: ['৫০টি', '১০০টি', '১৬৮টি', '২০০টি'], ans: 2, exp: 'বিক্রমশীল বিহারের অন্যতম আচার্য দীপঙ্কর শ্রীজ্ঞান ১৬৮টি গ্রন্থের প্রণেতা ছিলেন, যার মধ্যে মহাযানী সূত্রগ্রন্থ ও বজ্রযানী সাধন উল্লেখযোগ্য।'},
+      {q: 'গুজরাটের সুলতান আহম্মদ শাহ আহম্মদনগরে যেসব অট্টালিকা নির্মাণ করেন, তার অধিকাংশ কী দিয়ে তৈরি হয়েছিল?', opts: ['লাল বেলেপাথর দিয়ে', 'হিন্দু মন্দিরের ধ্বংসাবশেষ দিয়ে', 'নতুন পোড়ামাটির ইট দিয়ে', 'শ্বেতপাথর দিয়ে'], ans: 1, exp: 'প্রাদেশিক স্থাপত্যরীতির অন্যতম উদাহরণ হিসেবে গুজরাটে আহম্মদ শাহের অট্টালিকাগুলি মূলত হিন্দু মন্দিরের ধ্বংসাবশেষ দিয়েই তৈরি হয়েছিল।'},
+      {q: 'সুলতানি যুগে কে ফতোয়া-ই-জাহান্দারি এবং তারিখ-ই-ফিরোজশাহি রচনা করেছিলেন?', opts: ['মিনহাজ-উস্-সিরাজ', 'জিয়াউদ্দিন বারনি', 'আমির খসরু', 'শামস-ই-সিরাজ আফিফ'], ans: 1, exp: 'মহম্মদ বিন তুঘলক ও ফিরোজ তুঘলকের সভাসদ জিয়াউদ্দিন বারনি সমকালীন ইতিহাস নিয়ে এই দুটি বিখ্যাত গ্রন্থ রচনা করেছিলেন।'},
+      {q: 'আমির খসরু রচিত একটি ঐতিহাসিক কাব্যের নাম কী?', opts: ['তুঘলকনামা (বা কিরান-উস্-সাদিন)', 'ফুতুহা-উস-সালাতিন', 'তারিখ-ই-মুবারকশাহি', 'তাবাকাৎ-ই-নাসিরি'], ans: 0, exp: 'ভারতের তোতাপাখি নামে পরিচিত আমির খসরু কিরান-উস্-সাদিন, তুঘলকনামা প্রভৃতি ঐতিহাসিক গ্রন্থ রচনা করেন।'},
+      {q: 'মুঘল যুগের কোন ঐতিহাসিক গ্রন্থটি আবদুল হামিদ লাহোরি রচনা করেছেন?', opts: ['আকবরনামা', 'মুন্তাখাব-উল-লুবাব', 'পাদশাহনামা', 'হুমায়ুননামা'], ans: 2, exp: 'মুঘল যুগের বিশিষ্ট ঐতিহাসিক আবদুল হামিদ লাহোরি পাদশাহনামা গ্রন্থটি রচনা করেছিলেন।'},
+      {q: 'সুলতান ফিরোজ তুঘলক ভারতীয় রাগ সংগীতের ক্লাসিক গ্রন্থ রাগদর্পণ কোন্ ভাষায় অনুবাদ করান?', opts: ['আরবি', 'ফারসি', 'হিন্দি', 'উর্দু'], ans: 1, exp: 'ফিরোজ তুঘলকের উদ্যোগে ভারতীয় সংগীতের ধ্রুপদী গ্রন্থ রাগদর্পণ ফারসি ভাষায় অনূদিত হয়েছিল।'},
+      {q: 'প্রথম কোন মুঘল সম্রাট তাঁর আত্মজীবনীতে ভারতের সাধারণ মানুষের খালি পায়ে হাঁটা ও সামান্য বস্ত্র ব্যবহারের বর্ণনা দিয়েছেন?', opts: ['হুমায়ুন', 'আকবর', 'বাবর', 'জাহাঙ্গির'], ans: 2, exp: 'মুঘল সম্রাট বাবর তাঁর আত্মজীবনী তুজুক-ই-বাবরি-তে ভারতের সাধারণ মানুষের অত্যন্ত সাধারণ জীবনযাত্রা ও খালি পায়ে হাঁটার কথা উল্লেখ করেছেন।'},
+      {q: 'চোল স্থাপত্যের অন্যতম প্রধান বৈশিষ্ট্য কী ছিল, যা মূল মন্দিরের মতো বহুতলবিশিষ্ট এবং সুউচ্চ শিখরযুক্ত হত?', opts: ['মণ্ডপ', 'গোপুরম বা সিংহদ্বার', 'গর্ভগৃহ', 'প্রদক্ষিণ পথ'], ans: 1, exp: 'চোল মন্দিরগুলির অন্যতম প্রধান বৈশিষ্ট্য ছিল তাদের গগনচুম্বী ও আদ্যন্ত অলংকরণমণ্ডিত বিশালাকার গোপুরম বা সিংহদ্বার।'},
+      {q: 'সুলতানি আমলে নির্মিত কোয়াৎ-উল-ইসলাম মসজিদটি কে নির্মাণ করেছিলেন?', opts: ['ইলতুৎমিস', 'গিয়াসউদ্দিন বলবন', 'কুতুবউদ্দিন আইবক', 'আলাউদ্দিন খলজি'], ans: 2, exp: 'দিল্লি বিজয়ের স্মারক হিসেবে কুতুবউদ্দিন আইবক দিল্লিতে একটি জৈন মন্দির ভেঙে কোয়াৎ-উল-ইসলাম মসজিদ নির্মাণ করেন।'},
+      {q: 'কোন মুঘল সম্রাট সেকেন্দ্রায় আকবরের স্মৃতিসৌধের চিত্রগুলি বিনষ্ট করেছিলেন?', opts: ['শাহজাহান', 'জাহাঙ্গির', 'দ্বিতীয় বাহাদুর শাহ', 'ঔরঙ্গজেব'], ans: 3, exp: 'ঔরঙ্গজেব সর্বপ্রকার শিল্পের বিরোধী ছিলেন এবং তিনিই সেকেন্দ্রায় আকবরের স্মৃতিসৌধের চিত্রগুলি বিনষ্ট করেছিলেন।'}
+    ]
+  },
+  11: {
+    name: 'Set 11',
+    icon: '🏛️',
+    topic: 'শাসনতান্ত্রিক কাঠামো ও রাজস্ব ব্যবস্থা (গভীরতর বিশ্লেষণ)',
+    questions: [
+      {q: 'চোল রাজারা নিজেদের অপ্রতিহত ক্ষমতা ও প্রতিপত্তি বোঝাতে কোন্ উপাধিগুলি ধারণ করতেন?', opts: ['পরমেশ্বর ও পরমভট্টারক', 'চোলমার্তণ্ড ও পাণ্ড্যকুলাশনি', 'অরিরাজমর্দনশঙ্কর ও গজপতি', 'নায়েবৎ-ই-খুদাই ও জিলিল্লাহ'], ans: 1, exp: 'চোল রাজারা নিজেদের ঐশ্বরিক অধিকার ও পরাক্রম দাবি করার জন্য চোলমার্তণ্ড, পাণ্ড্যকুলাশনি, গঙ্গাইকোণ্ড, কড়ারকোণ্ড প্রভৃতি বিশাল উপাধি ধারণ করতেন।'},
+      {q: 'পাল যুগে দশটি গ্রাম নিয়ে গঠিত শাসনতান্ত্রিক বিভাগটিকে কী বলা হত?', opts: ['ভুক্তি', 'বিষয়', 'মণ্ডল', 'বিভাগ'], ans: 3, exp: 'পাল শাসনতান্ত্রিক কাঠামোতে দশটি গ্রাম নিয়ে একটি বিভাগ গঠিত হত এবং এই বিভাগের প্রধান শাসককে দাশ-গ্রামিক বলা হত।'},
+      {q: 'সেন যুগের মন্ত্রীদের মধ্যে কোন্ মন্ত্রী পররাষ্ট্র বা যুদ্ধ ও শান্তি বিভাগের প্রধান ছিলেন?', opts: ['মহাক্ষপটলিক', 'মহাসন্ধিবিগ্রহিক', 'মহাকরণাধ্যক্ষ', 'মহামুদ্রাধিকৃত'], ans: 1, exp: 'পাল ও সেন উভয় যুগেই পররাষ্ট্র অর্থাৎ যুদ্ধ ও শান্তি বিভাগের প্রধান মন্ত্রীকে মহাসন্ধিবিগ্রহিক বলা হত।'},
+      {q: 'সুলতানি যুগে দেওয়ান-ই-রিসালৎ নামক দফতরটির মূল দায়িত্ব কী ছিল?', opts: ['সামরিক পরিচালনা করা', 'হিসাবরক্ষণ ও রাজস্ব আদায়', 'ধর্মীয় বিষয় ও দানধ্যান দেখাশোনা করা', 'গুপ্তচরবৃত্তি'], ans: 2, exp: 'সুলতানি প্রশাসনে দেওয়ান-ই-রিসালৎ ছিল ধর্মীয় বিষয় ও দাতব্য কাজের দায়িত্বপ্রাপ্ত একটি অত্যন্ত গুরুত্বপূর্ণ দফতর।'},
+      {q: 'পাল যুগে উৎপাদিত শস্যের এক-ষষ্ঠাংশকে ভাগ বলা হত, এটি আদায়ের দায়িত্বে থাকা কর্মচারীকে কী বলা হত?', opts: ['তরিক', 'ষষ্ঠ অধিকৃত', 'ভোগপতি', 'প্রমাতৃ'], ans: 1, exp: 'পাল যুগে কৃষকদের কাছ থেকে উৎপাদিত শস্যের এক-ষষ্ঠাংশ বা ভাগ আদায় করার দায়িত্বে যে রাজকর্মচারী ছিলেন, তাঁকে ষষ্ঠ অধিকৃত বলা হত।'},
+      {q: 'সেন শাসনব্যবস্থায় পাল যুগের হিসাবরক্ষক প্রধান জ্যেষ্ঠকায়স্থ-এর পদটি অবলুপ্ত করে কোন্ নতুন পদ আনা হয়েছিল?', opts: ['মহাকায়স্থ', 'মহাক্ষপটলিক', 'ক্ষেত্রপ', 'মহাদণ্ডনায়ক'], ans: 0, exp: 'পাল যুগে রাজস্ব বিভাগের হিসাবরক্ষক ছিলেন জ্যেষ্ঠকায়স্থ, কিন্তু সেন যুগে এই পদের পরিবর্তে মহাকায়স্থ পদটি ব্যবহার করা শুরু হয়।'},
+      {q: 'রাষ্ট্রকূট শাসনব্যবস্থায় যে কর্মচারীরা বংশানুক্রমিকভাবে কর আদায়ের কাজ করতেন, তাঁদের কী বলা হত?', opts: ['দাশ-গ্রামিক', 'বিষয়পতি', 'দেশ-গ্রামক', 'তরিক'], ans: 2, exp: 'রাষ্ট্রকূট যুগে রাজস্ব আদায়ের দায়িত্বে থাকা দেশ-গ্রামক নামক কর্মচারীরা বংশানুক্রমিকভাবে এই কাজ করতেন।'},
+      {q: 'কোন্ সুলতান ভারতের নববিজিত রাজ্যগুলিকে নিয়ে গুজরাট, বাংলা, খান্দেশ প্রভৃতি বড়ো বড়ো প্রদেশ গঠন করেছিলেন?', opts: ['ইলতুৎমিস', 'আলাউদ্দিন খলজি', 'ফিরোজ তুঘলক', 'মহম্মদ বিন তুঘলক'], ans: 1, exp: 'আলাউদ্দিন খলজি ভারতের বিরাট অংশ নিজ অধীনে আনার পর ইকতা ব্যবস্থার পাশাপাশি নববিজিত অঞ্চলগুলিকে নিয়ে বড়ো বড়ো প্রদেশ গঠন করে প্রাদেশিক শাসন সুসংহত করেছিলেন।'},
+      {q: 'মুঘল প্রশাসনে কে বাদশাহ এবং প্রশাসনের মধ্যে প্রধান যোগসূত্রকারী হিসেবে কাজ করতেন?', opts: ['মির সামান', 'মির বকশি', 'ভকিল', 'সদর-উস্-সুদুর'], ans: 2, exp: 'মুঘল প্রশাসনে বাদশাহের পরেই ছিলেন ভকিল বা প্রধানমন্ত্রী। তিনি বাদশাহের প্রধান পরামর্শদাতা এবং বাদশাহ ও প্রশাসনের মধ্যে যোগসূত্রকারী হিসেবে কাজ করতেন।'},
+      {q: 'সুলতানি যুগে কোন সুলতান সর্বপ্রথম জমি জরিপের ব্যবস্থা করেছিলেন বলে মনে করা হয়?', opts: ['আলাউদ্দিন খলজি', 'গিয়াসউদ্দিন বলবন', 'ফিরোজ তুঘলক', 'মহম্মদ ঘুরি'], ans: 0, exp: 'ঐতিহাসিক তথ্যাদি থেকে জানা যায় যে, সুলতানি আমলে সম্ভবত আলাউদ্দিন খলজিই প্রথম রাজস্ব আদায়ের জন্য জমি জরিপের ব্যবস্থা করেছিলেন।'},
+      {q: 'চোল যুগে লঘু অপরাধেও গুরুদণ্ড দেওয়ার প্রথা ছিল—এই তথ্যটি কোন্ চিনা লেখকের বিবরণ থেকে জানা যায়?', opts: ['ফা-হিয়েন', 'হিউয়েন সাঙ', 'চৌ-জু-কুয়া', 'ইৎসিং'], ans: 2, exp: 'ত্রয়োদশ শতকে চিনা লেখক চৌ-জু-কুয়া তাঁর বিবরণীতে উল্লেখ করেছেন যে, চোল যুগের বিচারব্যবস্থায় লঘু অপরাধেও গুরুদণ্ড দেওয়া হত।'},
+      {q: 'পাল সেনাবাহিনীতে পদাতিক ও নৌবাহিনী ছাড়াও হস্তীবাহিনী সবচেয়ে বড়ো ছিল। তারা কোথা থেকে ভালো জাতের ঘোড়া আমদানি করত?', opts: ['আরব ও মিশর থেকে', 'মধ্য ও পশ্চিম এশিয়া থেকে', 'ইউরোপ থেকে', 'চিন থেকে'], ans: 1, exp: 'পাল সাম্রাজ্যের সামরিক শক্তি অটুট রাখার জন্য পাল রাজারা মধ্য ও পশ্চিম এশিয়া থেকে তাদের অশ্বারোহী বাহিনীর জন্য ঘোড়া আমদানি করতেন।'},
+      {q: 'রাজপুত সেনাদলে ভাণ্ডাগারিক নামক কর্মচারীদের কাজ কী ছিল?', opts: ['ঘোড়ার পরিচর্যা করা', 'দুর্গ রক্ষা করা', 'গুপ্তচরবৃত্তির কাজ করা', 'সেনাদলের খাদ্য, বাসস্থান ও পোশাক-পরিচ্ছদ সরবরাহ করা'], ans: 3, exp: 'রাজপুত সেনাবাহিনীর সুষ্ঠু পরিচালনার জন্য ভাণ্ডাগারিক নামক কর্মচারীরা সেনাদলের খাদ্য সরবরাহ, বাসস্থান ও অন্যান্য আনুষঙ্গিক বিষয়ের দায়িত্বে থাকতেন।'},
+      {q: 'কোন্ মুঘল সম্রাট তাঁর রাজস্বমন্ত্রী টোডরমলকে দিয়ে ১৫৮২ খ্রিস্টাব্দে জাবতি বা দহসালা রাজস্ব ব্যবস্থার প্রবর্তন করেছিলেন?', opts: ['বাবর', 'হুমায়ুন', 'আকবর', 'শাহজাহান'], ans: 2, exp: 'সম্রাট আকবরের নির্দেশ ও উদ্যোগে তাঁর সুযোগ্য রাজস্বমন্ত্রী রাজা টোডরমল ১৫৮২ খ্রিস্টাব্দে জমি জরিপ করে এই নতুন রাজস্ব ব্যবস্থার প্রবর্তন করেন।'},
+      {q: 'ইকতা ব্যবস্থার প্রধান দুর্বলতা কী ছিল যা রুখতে সুলতানি রাষ্ট্র সর্বদা সচেষ্ট ছিল?', opts: ['কৃষকদের বিদ্রোহ', 'সামন্ততান্ত্রিক প্রবণতার বিকাশ', 'রাজস্ব ঘাটতি', 'বিদেশি আক্রমণ'], ans: 1, exp: 'ইকতা প্রথা বংশানুক্রমিক না হলেও মাকতি বা ইকতাদারদের মধ্যে নিজেদের ক্ষমতা বৃদ্ধি করে সামন্ততান্ত্রিক প্রবণতা গড়ে ওঠার সম্ভাবনা ছিল, যা রোধ করতে সুলতানরা তাদের মাঝে মাঝে বদলি করতেন।'}
+    ]
+  },
+  12: {
+    name: 'Set 12',
+    icon: '🌾',
+    topic: 'কৃষি, শিল্প ও বিদেশি পর্যটকদের বিস্তারিত পর্যবেক্ষণ',
+    questions: [
+      {q: 'সেন রাজা বিশ্বরূপ সেন তাঁর তাম্রশাসনে পণ্ডিত হলায়ুধকে ১১টি ভূখণ্ড নিষ্কর হিসেবে দান করেছিলেন—এটি কোন্ প্রথার অন্তর্গত ছিল?', opts: ['ইকতা প্রথা', 'মনসবদারি প্রথা', 'অগ্রহার ব্যবস্থা', 'জায়গির প্রথা'], ans: 2, exp: 'প্রাচীন ও আদি মধ্যযুগে ব্রাহ্মণ বা পণ্ডিতদের এই নিষ্কর জমিদানের প্রথাটি অগ্রহার ব্যবস্থারই (ব্রহ্মদেয়) একটি সুস্পষ্ট নিদর্শন।'},
+      {q: 'কোন্ পর্যটকের বিবরণ থেকে জানা যায় যে, দ্বাদশ শতকে মালবে প্রচুর চিনি উৎপাদিত হয়ে তা গুজরাটে রপ্তানি হত?', opts: ['আল-মাসুদি', 'চৌ-জু-কুয়া', 'ইবন বতুতা', 'মার্কো পোলো'], ans: 1, exp: 'চৈনিক পর্যটক চৌ-জু-কুয়া তাঁর রচিত চু-ফান-চি গ্রন্থে মালব থেকে গুজরাটে চিনি রপ্তানির এই সুস্পষ্ট উল্লেখ করেছেন।'},
+      {q: 'জৈন কবি হেমচন্দ্রের অভিধানচিন্তামণি গ্রন্থে বয়নশিল্পের কোন্ কাজের জন্য ধনুক ব্যবহারের কথা উল্লেখ আছে?', opts: ['রেশম বোনার জন্য', 'তুলো পেঁজার জন্য', 'সুতো কাটার জন্য', 'কাপড় রং করার জন্য'], ans: 1, exp: 'এই গ্রন্থ থেকে জানা যায় যে, সেই যুগে তুলো পেঁজা এবং তা বোনার উপযোগী করার কাজে ধনুকের ব্যবহার প্রচলিত ছিল।'},
+      {q: 'একাদশ-দ্বাদশ শতকের কোন্ গ্রন্থে ছয় ধরনের লোহার উল্লেখ আছে, যা সেযুগের উন্নত খনিজ শিল্পের প্রমাণ দেয়?', opts: ['পর্যয়মুক্তাবলী', 'দেশীনামমালা', 'কৃষিপরাশর', 'নীতিসার'], ans: 0, exp: 'একাদশ-দ্বাদশ শতকের পর্যায়মুক্তাবলী গ্রন্থে ছয় ধরনের লোহার উল্লেখ তৎকালীন উন্নত ধাতু ও খনিজ শিল্পের অসামান্য প্রমাণ বহন করে।'},
+      {q: 'মুঘল যুগে আমেরিকা থেকে ভারতে আসা তিনটি নতুন ফলের নাম কী ছিল?', opts: ['আম, জাম ও কাঁঠাল', 'আঙুর, বেদানা ও তরমুজ', 'আনারস, পেঁপে ও কাজুবাদাম', 'আপেল, কমলালেবু ও ডুমুর'], ans: 2, exp: 'মুঘল আমলে বহির্বিশ্বের সঙ্গে যোগাযোগের ফলে আমেরিকা থেকে এই তিনটি সম্পূর্ণ নতুন ফলের গাছ ভারতে এসেছিল।'},
+      {q: 'মুঘল সম্রাট সিকান্দার লোদি কোন্ অঞ্চলের বেদানাকে পারস্যের বেদানার চেয়ে অধিকতর সুস্বাদু ও সুগন্ধিময় বলে মনে করতেন?', opts: ['কাশ্মীরের', 'যোধপুরের', 'গুজরাটের', 'সিন্ধুর'], ans: 1, exp: 'সুলতানি ও মুঘল যুগে ভারতে ফলের চাষ এতটাই উন্নত ছিল যে সুলতান সিকান্দার লোদি যোধপুরে উৎপাদিত বেদানাকে পারস্যের বেদানার চেয়ে শ্রেষ্ঠ বলে মানতেন।'},
+      {q: 'আল বিরুনি রচিত তহকিক্-ই-হিন্দ গ্রন্থটি মূলত কোন্ ভাষায় রচিত হয়েছিল?', opts: ['ফারসি', 'তুর্কি', 'আরবি', 'উর্দু'], ans: 2, exp: 'সে যুগে আরবি একটি আন্তর্জাতিক ভাষা হওয়ায় আল বিরুনি তাঁর এই জ্ঞানগর্ভ বিশ্বকোষটি আরবি ভাষাতেই রচনা করেছিলেন।'},
+      {q: 'কোন্ ফরাসি পর্যটকের বর্ণনায় বলা হয়েছে যে, মুঘল রাজস্ব বাকি পড়ার অপরাধে কৃষকদের এক ইঞ্চি গভীর কোড়া দিয়ে আঘাত করে চরম শারীরিক অত্যাচার করা হত?', opts: ['বার্নিয়ে', 'তাভার্নিয়ে', 'মানুচি', 'পিটার মান্ডি'], ans: 2, exp: 'ইতালীয় পর্যটক নিকোলাও মানুচি (১৬৫৩-১৭০৮ খ্রি.) মুঘল যুগের কৃষকদের ওপর এই মর্মান্তিক শারীরিক নির্যাতনের অমানবিক চিত্র তুলে ধরেছিলেন।'},
+      {q: 'মুঘল যুগে বলাহার বলতে কাদের বোঝানো হত?', opts: ['ধনী কৃষকদের', 'গ্রামপ্রধানদের', 'ভাড়াটিয়া কৃষকদের', 'ভূমিহীন দিনমজুরদের'], ans: 3, exp: 'মুঘল গ্রামীণ সমাজে কৃষকদের বিভিন্ন স্তরের মধ্যে সবার নীচে থাকা ভূমিহীন দিনমজুরদের বলাহার বলা হত।'},
+      {q: 'মুঘল যুগে উৎপাদিত বাংলার মসলিন ইউরোপীয় সুক্ষ্মতম বস্ত্রের চেয়েও অনেক উন্নত ছিল—এই প্রশংসা কারা করেছেন?', opts: ['এডওয়ার্ড টেরি ও ফ্রান্সিসকো পেলসার্ট', 'আল-মাসুদি ও ইবন বতুতা', 'তাভার্নিয়ে ও বার্নিয়ে', 'মানুচি ও মার্কো পোলো'], ans: 0, exp: 'এই বিদেশি পর্যটকরা বাংলার সুক্ষ্ম মসলিনের ভূয়সী প্রশংসা করে একে সমকালীন ইউরোপীয় বস্ত্রের চেয়েও শ্রেষ্ঠ বলে দাবি করেছিলেন।'},
+      {q: 'চতুর্দশ শতকে দিল্লি শহরের বাসিন্দা থাক্কুরা ফেরু তাঁর বর্ণনায় দিল্লিতে কত রকম কৃষিপণ্যের উল্লেখ করেছেন?', opts: ['পনেরো রকম', 'পঁচিশ রকম', 'চল্লিশ রকম', 'পঞ্চাশ রকম'], ans: 1, exp: '১২৯০ খ্রিস্টাব্দে দিল্লির বাসিন্দা থাক্কুরা ফেরুর রচনা থেকে তৎকালীন দিল্লিতে উৎপন্ন পঁচিশ রকম কৃষিপণ্যের কথা জানা যায়।'},
+      {q: 'ফরাসি দার্শনিক গাস্যাদির সংস্পর্শে আসা কোন্ পর্যটক ভারতে এসে শাহজাহানের অসুস্থতা ও দারা-ঔরঙ্গজেবের ক্ষমতার লড়াই চাক্ষুষ করেছিলেন?', opts: ['ফ্রাঁসোয়া বার্নিয়ে', 'জাঁ বাপ্তিস্ত তাভার্নিয়ে', 'পিটার মান্ডি', 'টমাস রো'], ans: 0, exp: 'বার্নিয়ে ১৬৫৮ থেকে ১৬৬৮ খ্রিস্টাব্দ পর্যন্ত ভারতে থাকাকালীন শাহজাহানের শেষজীবন এবং পুত্রদের মধ্যে সিংহাসনের জন্য রক্তক্ষয়ী সংগ্রাম প্রত্যক্ষ করেন।'},
+      {q: 'আরবীয় পর্যটক ও ঐতিহাসিক আল-মাসুদি কোন্ গ্রন্থে দাবি করেছেন যে ভারতের রাজন্যবর্গ প্রায়শই যুদ্ধে লিপ্ত থাকতেন এবং সিংহাসন রাজপরিবারের বাইরে যেত না?', opts: ['মুরুজ-উল-জহাব', 'আখবর-উজ-জামান', 'তহকিক-ই-হিন্দ', 'রেহলা'], ans: 1, exp: 'তাঁর রচিত এই ত্রিশ খণ্ডের বিশাল বিশ্বকোষে তিনি ভারতের রাজনৈতিক ও সামাজিক অবস্থার এই বিস্তৃত পর্যবেক্ষণ তুলে ধরেছিলেন।'},
+      {q: 'কোন্ বিদেশি পর্যটকের বিবরণ থেকে জানা যায় যে, চতুর্দশ শতকে ভারতের পশ্চিম উপকূলে মালাবারে প্রচুর গোলমরিচ উৎপাদিত হত এবং তাল ও নারকেলের রস থেকে মদ তৈরি হত?', opts: ['মার্কো পোলো', 'ইবন বতুতা', 'নিকোলো কন্টি', 'আবদুর রজ্জাক'], ans: 0, exp: 'ইতালীয় পর্যটক মার্কো পোলো তাঁর ভারত ভ্রমণকালে মালাবার উপকূলে (কৈলম রাজ্যে) গোলমরিচ চাষ ও স্থানীয় জীবনযাত্রার এই সুস্পষ্ট বর্ণনা দিয়েছেন।'},
+      {q: 'মুঘল যুগে সোনারগাঁও থেকে লাহোর পর্যন্ত বিস্তৃত বিখ্যাত সড়কটি মূলত কী কাজে ব্যবহৃত হত?', opts: ['সামরিক কুচকাওয়াজের জন্য', 'তীর্থযাত্রীদের জন্য', 'স্থলপথে অভ্যন্তরীণ বাণিজ্য ও মাল পরিবহণের জন্য', 'কেবলমাত্র সম্রাটের ভ্রমণের জন্য'], ans: 2, exp: 'এই ঐতিহাসিক সড়কটি উত্তর ভারতের প্রায় অধিকাংশ শহরকে ছুঁয়ে গিয়েছিল এবং এর দু-পাশে থাকা সরাইখানাগুলি বণিকদের বিশ্রাম ও বাণিজ্যের প্রধান কেন্দ্র ছিল।'}
+    ]
+  },
+  13: {
+    name: 'Set 13',
+    icon: '👥',
+    topic: 'সমাজ, ধর্ম এবং নারী সমাজের পরিস্থিতি',
+    questions: [
+      {q: 'চালুক্যরাজ বিক্রমাদিত্যের ভগিনী অক্কা দেবী কোন্ বিশেষ গুণের জন্য ইতিহাসে স্মরণীয়?', opts: ['তিনি একজন বিখ্যাত কবি ছিলেন', 'তিনি একজন দক্ষ শাসক ছিলেন এবং যুদ্ধক্ষেত্রে সেনা পরিচালনা করতেন', 'তিনি জৈন ধর্মের প্রধান প্রচারক ছিলেন', 'তিনি বিখ্যাত গায়িকা ছিলেন'], ans: 1, exp: 'দশম থেকে দ্বাদশ শতকের মধ্যে রাজপুত নারী সমাজের স্বাধীনতার দৃষ্টান্ত দিতে গিয়ে ঐতিহাসিকরা অক্কা দেবীর এই বীরত্ব ও প্রশাসনিক দক্ষতার কথা উল্লেখ করেন।'},
+      {q: 'মুঘল যুগে হিন্দু সমাজে চণ্ডালদের কী বলে গণ্য করা হত, যারা গ্রাম বা শহরের বাইরে বাস করত?', opts: ['দ্বিতীয় বর্ণ', 'তৃতীয় বর্ণ', 'পঞ্চম বর্ণ', 'বিদেশি'], ans: 2, exp: 'মুঘল যুগেও হিন্দু সমাজে জাতিভেদের প্রভাব তীব্র ছিল এবং অস্পৃশ্য চণ্ডালদের পঞ্চম বর্ণ বলে গণ্য করা হত।'},
+      {q: 'কোন্ মুঘল সম্রাট তাঁর আত্মজীবনীতে সতর্ক করে লিখেছিলেন, ভারতে নানা ধর্মের মানুষ বাস করে। তাই কোনোপ্রকার ধর্মীয় সংকীর্ণতা দ্বারা তোমার মন আচ্ছন্ন হওয়া উচিত নয়?', opts: ['বাবর', 'আকবর', 'শাহজাহান', 'জাহাঙ্গির'], ans: 0, exp: 'প্রথম মুঘল সম্রাট বাবর তাঁর পুত্র হুমায়ুনকে উদ্দেশ্য করে এই ধর্মীয় উদারতা ও সহনশীলতার উপদেশ দিয়ে গিয়েছিলেন।'},
+      {q: 'মুঘল যুগে হিন্দুস্থানি মুসলিম বলতে মূলত কাদের বোঝানো হত?', opts: ['পারস্য থেকে আসা মুসলিমদের', 'ধর্মান্তরিত হিন্দুদের যারা মুঘল দরবারে উচ্চপদ লাভ করেছিল', 'তুর্কি থেকে আসা মুসলিমদের', 'সুফি সাধকদের'], ans: 1, exp: 'মুঘল সমাজে বহিরাগত ইরানি ও তুরানি গোষ্ঠীর পাশাপাশি ধর্মান্তরিত ভারতীয় হিন্দুদের নিয়ে হিন্দুস্থানি মুসলিম গোষ্ঠী গড়ে উঠেছিল।'},
+      {q: 'মুঘল শাহজাদা দারাশিকো রচিত মাজমা-উল্-বাহরিন গ্রন্থটির মূল বিষয়বস্তু কী ছিল?', opts: ['মুঘল সাম্রাজ্যের সামরিক ইতিহাস', 'সুফি দর্শন ও হিন্দু দর্শনের মধ্যে সর্বধর্মসমন্বয়', 'কৃষিব্যবস্থার নিয়মাবলি', 'বৈদেশিক বাণিজ্যের হিসাব'], ans: 1, exp: 'দারাশিকো হিন্দু যোগশাস্ত্র ও সুফি দর্শনে অত্যন্ত পারদর্শী ছিলেন এবং এই গ্রন্থে তিনি দুই ধর্মের মূলগত ঐক্যের কথা তুলে ধরেছেন।'},
+      {q: 'সুলতানি যুগের প্রারম্ভে উলেমারা সুলতানদের কোন্ শাসন পরিচালনা করার পরামর্শ দিতেন, যা ইলতুৎমিস বা আলাউদ্দিন খলজি মানতে অস্বীকার করেন?', opts: ['ধর্মনিরপেক্ষ শাসন', 'ইসলামীয় ধর্মতত্ত্ব বা শরিয়ৎ অনুযায়ী শাসন', 'হিন্দু আইন অনুযায়ী শাসন', 'গ্রিক আইন অনুযায়ী শাসন'], ans: 1, exp: 'রক্ষণশীল উলেমারা সর্বদা রাষ্ট্রকে শরিয়ৎ অনুযায়ী চালানোর নির্দেশ দিলেও, বাস্তব পরিস্থিতির খাতিরে সুলতানরা জাহানদারি বা রাষ্ট্রের প্রয়োজনে শাসন করতেন।'},
+      {q: 'আল বিরুনির মতে, সমকালীন হিন্দুরা কেন অন্যান্য জাতির সঙ্গে অর্জিত জ্ঞান ভাগ করে নিতে কুন্ঠিত হত?', opts: ['তাদের জ্ঞানের অভাব ছিল বলে', 'তারা অত্যন্ত দাম্ভিক, আত্মম্ভরি এবং নিজেদের শ্রেষ্ঠ মনে করত বলে', 'তাদের ভাষা অন্যেরা বুঝত না বলে', 'রাজারা তা নিষিদ্ধ করেছিল বলে'], ans: 1, exp: 'আল বিরুনি সমকালীন হিন্দু সমাজের সংকীর্ণতা ও বিচ্ছিন্নতার কড়া সমালোচনা করে বলেছেন যে, আত্মশ্লাঘার কারণেই তারা বিশ্বজগত থেকে বিচ্ছিন্ন হয়ে পড়েছিল।'},
+      {q: 'সুলতানি যুগে মুসলিম সমাজের সর্বনিম্ন স্তরে মূলত কারা অবস্থান করত?', opts: ['সৈনিকরা', 'উলেমারা', 'শিল্পী, দোকানদার, ক্ষুদ্র ব্যবসায়ী ও ক্রীতদাসরা', 'কাজি ও ইমামরা'], ans: 2, exp: 'সুলতানি যুগে মুসলিম সমাজ দুই ভাগে (বুদ্ধিজীবী ও সৈনিক) বিভক্ত থাকলেও এর সর্বনিম্ন স্তরে এই শ্রমজীবী ও দাস শ্রেণি অবস্থান করত।'},
+      {q: 'হিন্দুরা প্রায় সবাই ভূত এবং ভূতনাথ শিবে বিশ্বাসী—এই মন্তব্যটি কোন্ বিদেশি পর্যটকের রচনায় পাওয়া যায়?', opts: ['তাভার্নিয়ে', 'নিকিতিন', 'ইবন বতুতা', 'বার্নিয়ে'], ans: 1, exp: 'রুশ পরিব্রাজক নিকিতিন (১৪৬১-১৪৭৪ খ্রি.) বাহমনি রাজ্যে থাকাকালীন হিন্দুদের ধর্মবিশ্বাস ও রীতিনীতি অত্যন্ত কাছ থেকে দেখে এই মন্তব্যটি করেছিলেন।'},
+      {q: 'মুঘল যুগে কোন্ মুঘল নারীরা নিজেদের প্রতিভাবলে ইতিহাসে স্মরণীয় হয়ে আছেন?', opts: ['সুলতানা রাজিয়া ও মীরাবাঈ', 'রানি দুর্গাবতী, চাঁদবিবি, জিজাবাঈ ও গুলবদন বেগম', 'পদ্মাবতী ও কর্ণাবতী', 'অক্কা দেবী ও হোনাম্মা'], ans: 1, exp: 'নারীসমাজের অবহেলিত অবস্থার মধ্যেও মুঘল যুগে এই প্রতিভাময়ী নারীরা নিজেদের যোগ্যতা, বীরত্ব ও সাহিত্যকীর্তির জন্য স্মরণীয় হয়ে আছেন।'},
+      {q: 'দশম থেকে দ্বাদশ শতকের মধ্যে দক্ষিণ ভারতে লিঙ্গায়েতরা প্রধানত কার উপাসনা করত?', opts: ['ভগবান বিষ্ণুর', 'সূর্যদেবের', 'শিবের', 'মা কালীর'], ans: 2, exp: 'দ্বাদশ শতকে দাক্ষিণাত্যে লিঙ্গায়েত সম্প্রদায় শিবের আরাধনা শুরু করে এবং হিন্দুধর্মের প্রসারে গুরুত্বপূর্ণ ভূমিকা পালন করে।'},
+      {q: 'প্রাচীন ভারতে বিষ্টি বলতে কী বোঝানো হত?', opts: ['এক ধরনের সুতিবস্ত্র', 'বেগার শ্রম প্রথা', 'সেচযন্ত্র', 'পথকর'], ans: 1, exp: 'প্রাচীন ও আদি মধ্যযুগে কৃষকদের দিয়ে বিনা পারিশ্রমিকে কাজ করিয়ে নেওয়ার প্রথাকে বিষ্টি বা বেগার শ্রম বলা হত।'},
+      {q: 'সুলতানি যুগে ক্রীতদাস বা দাসদাসীদের কীসের মতো বাজারে বিক্রি করা হত বলে ঐতিহাসিক জিয়াউদ্দিন বারনি উল্লেখ করেছেন?', opts: ['জমির মতো', 'গোরু, ঘোড়ার মতো পশুর মতো', 'অলংকারের মতো', 'বইয়ের মতো'], ans: 1, exp: 'বারনির বর্ণনা থেকে জানা যায় যে, সে যুগে দাসবাজারে গোরু বা ঘোড়ার মতোই সাধারণ দাসদাসীদের কেনাবেচা চলত।'},
+      {q: 'আল বিরুনি সমকালীন হিন্দু সমাজের বিচারব্যবস্থায় কোন্ বৈষম্যের কথা উল্লেখ করেছেন?', opts: ['গরিবদের বিচার হত না', 'ব্রাহ্মণরা বিশেষ সুবিধা পেত এবং তাদের প্রাণদণ্ড দেওয়া যেত না', 'মেয়েদের কোনো বিচার চাওয়ার অধিকার ছিল না', 'কেবলমাত্র রাজাই বিচার করতেন'], ans: 1, exp: 'সামাজিক অসাম্যের চিত্র তুলে ধরে আল বিরুনি দেখিয়েছেন যে, বিচারে ব্রাহ্মণরা সর্বোচ্চ সুবিধা ভোগ করত এবং তাদের ফাঁসি বা প্রাণদণ্ড নিষিদ্ধ ছিল।'},
+      {q: 'চোল যুগে গ্রামের নারী ও পুরুষ নির্বিশেষে দু-বেলা স্নান করার প্রথার কথা কোন্ পর্যটক উল্লেখ করেছেন?', opts: ['মার্কো পোলো', 'আবদুর রজ্জাক', 'তাভার্নিয়ে', 'আল বিরুনি'], ans: 0, exp: 'মার্কো পোলো দক্ষিণ ভারতের করমণ্ডল উপকূলে ভ্রমণকালে সেখানকার অধিবাসীদের পরিচ্ছন্নতা ও দু-বেলা স্নান করার এই কড়া নিয়মের কথা উল্লেখ করেছেন।'}
+    ]
+  },
+  14: {
+    name: 'Set 14',
+    icon: '📝',
+    topic: 'সাহিত্য ও ভাষার বিকাশ (দশম থেকে সপ্তদশ শতক)',
+    questions: [
+      {q: 'পাল যুগে চিকিৎসাশাস্ত্র বিষয়ক গ্রন্থ চিকিৎসাসার সংগ্রহ কে রচনা করেন?', opts: ['মাধবকার', 'চক্রপাণি দত্ত', 'বঙ্গসেন', 'সুরেশ্বর'], ans: 2, exp: 'পাল যুগে বিজ্ঞান ও চিকিৎসাশাস্ত্র চর্চার অন্যতম শ্রেষ্ঠ নিদর্শন হিসেবে বঙ্গসেন এই বিখ্যাত গ্রন্থটি রচনা করেছিলেন।'},
+      {q: 'পাল যুগে উদ্ভিদবিদ্যা ও ভেষজগুণের ওপর বৃক্ষায়ুর্বেদ এবং লৌহ পদ্ধতি গ্রন্থ দুটি কে রচনা করেন?', opts: ['সুরেশ্বর', 'চক্রপাণি দত্ত', 'উদয়ন', 'মৈত্রেয় রক্ষিত'], ans: 0, exp: 'বিশিষ্ট চিকিৎসক সুরেশ্বর গাছের গুণাগুণ এবং লোহার ভেষজ গুণাবলি নিয়ে এই অসামান্য দুটি বিজ্ঞানভিত্তিক গ্রন্থ রচনা করেন।'},
+      {q: 'পাল যুগে অদ্বৈত দর্শন ও তর্কশাস্ত্রে সুপণ্ডিত উদয়ন কোন্ দুটি গ্রন্থ রচনা করেছিলেন?', opts: ['দায়ভাগ ও কালবিবেক', 'লক্ষণাবলী ও কিরণাবলী', 'হেতুতত্ত্বোপদেশ ও কার্যকারণভাবসিদ্ধি', 'অদ্ভুতসাগর ও দানসাগর'], ans: 1, exp: 'পাল যুগে দর্শন ও তর্কশাস্ত্রের প্রথিতযশা পণ্ডিত উদয়ন এই দুটি অত্যন্ত গুরুত্বপূর্ণ গ্রন্থ রচনা করেছিলেন।'},
+      {q: 'কনৌজের রাজা মহেন্দ্রপালের রাজসভা অলংকৃত করা প্রখ্যাত নাট্যকার রাজশেখর কোন্ গ্রন্থগুলি রচনা করেছিলেন?', opts: ['রামচরিত ও রামচরিতমানস', 'গীতগোবিন্দ ও পবনদূত', 'বালরামায়ণ, বিদ্ধশালভঞ্জিকা ও কর্পূরমঞ্জরী', 'শিশুপালবধ ও রাবণবধ'], ans: 2, exp: 'রাজপুত যুগে সংস্কৃত সাহিত্যের উজ্জ্বল রত্ন রাজশেখর এই বিখ্যাত নাটকগুলি রচনা করে কনৌজ রাজসভার গৌরব বৃদ্ধি করেছিলেন।'},
+      {q: 'রাষ্ট্রকূট রাজ তৃতীয় ইন্দ্রের সভাকবি ত্রিবিক্রম গদ্য ও পদ্যের সংমিশ্রণে যে নতুন ধরনের কাব্য রচনা করেন, তার নাম কী ছিল?', opts: ['চম্পু (নলচম্পু)', 'রাসো', 'দোঁহা', 'প্রবন্ধ'], ans: 0, exp: 'দশম শতকে রাষ্ট্রকূট দরবারে গদ্য ও পদ্যের অভিনব সংমিশ্রণে রচিত চম্পু কাব্যরীতির স্রষ্টা ছিলেন ত্রিবিক্রম এবং তাঁর বিখ্যাত রচনা ছিল নলচম্পু।'},
+      {q: 'রাষ্ট্রকূট যুগের বিখ্যাত কন্নড় সাহিত্যিক পম্প, পোন্ন ও রন্ন-কে একত্রে কী বলা হত?', opts: ['অষ্টদিগ্‌গজ', 'নবরত্ন', 'ত্রিরত্ন', 'ত্রিদেব'], ans: 2, exp: 'কন্নড় কাব্যসাহিত্যের বিকাশে এই তিনজনের অসামান্য অবদানের জন্য তাঁদের একত্রে কন্নড় সাহিত্যের ত্রিরত্ন বলে স্বীকার করা হয়।'},
+      {q: 'চোল যুগে বীর রাজেন্দ্রর আমলে বুদ্ধমিত্র তামিল ও সংস্কৃত ব্যাকরণের সমন্বয় ঘটিয়ে কোন্ গ্রন্থটি রচনা করেন?', opts: ['দণ্ডীয়ারম্', 'নেনিনাথন্', 'বীরসোলিয়ম্', 'জীবকচিন্তামণি'], ans: 2, exp: '১০৬২-৭০ খ্রিস্টাব্দের মধ্যে বুদ্ধমিত্র এই অসামান্য গ্রন্থটি রচনা করে তামিল ও সংস্কৃত ভাষার ব্যাকরণ ও অলংকারের মধ্যে চমৎকার সমন্বয় সাধন করেন।'},
+      {q: 'চোল যুগে জৈন কবি তিরুত্তকদেবর তামিল ভাষায় কোন্ শ্রেষ্ঠ মহাকাব্যটি রচনা করেছিলেন?', opts: ['রামায়ণম্', 'জীবকচিন্তামণি', 'মুকুন্দমালা', 'কুলোত্তুঙ্গচোলচরিতে'], ans: 1, exp: 'তামিল সাহিত্যের অন্যতম শ্রেষ্ঠ রত্ন হিসেবে স্বীকৃত এই মহাকাব্যটি জৈন কবি তিরুত্তকদেবর চোল যুগে রচনা করেছিলেন।'},
+      {q: 'সুলতানি আমলে সংস্কৃত গল্পগ্রন্থ তুতিনামা-কে ফারসি ভাষায় কে অনুবাদ করেছিলেন?', opts: ['জিয়াউদ্দিন বারনি', 'জিয়া নক্সবি', 'আমির খসরু', 'মিনহাজউদ্দিন সিরাজ'], ans: 1, exp: 'মহম্মদ-বিন-তুঘলকের রাজত্বকালে জিয়া নক্সবি অত্যন্ত দক্ষতার সঙ্গে সংস্কৃত গল্পের এই সংকলনটি ফারসিতে অনুবাদ করেন।'},
+      {q: 'মুঘল যুগে সম্রাট আকবরের পৃষ্ঠপোষকতায় মহাভারত ফারসি ভাষায় অনূদিত হয়েছিল। এই অনুবাদ কাজে আকবরের কোন্ সভাসদ যুক্ত ছিলেন, যিনি একাধিক ভাষায় পটু ছিলেন?', opts: ['বীরবল', 'টোডরমল', 'আবদুর রহিম খান-ই-খানান', 'আবুল ফজল'], ans: 2, exp: 'তিনি একাধারে সামরিক নেতা এবং আরবি, ফারসি, তুর্কি, হিন্দি ও সংস্কৃত ভাষায় সুপণ্ডিত ছিলেন এবং আকবরের অনুবাদ বিভাগে গুরুত্বপূর্ণ ভূমিকা নিয়েছিলেন।'},
+      {q: 'আরবদের সিন্ধুজয় সম্পর্কে আরবি ভাষায় রচিত প্রামাণ্য ইতিহাস গ্রন্থটির নাম কী?', opts: ['তহকিক-ই-হিন্দ', 'চাচনামা', 'তাজ-উল-মাসির', 'তুঘলকনামা'], ans: 1, exp: 'মির মহম্মদ মাসুম রচিত তারিখ-ই-সিন্ধ-এর পাশাপাশি চাচনামা গ্রন্থটিও আরবদের সিন্ধু বিজয়ের অন্যতম প্রধান ও প্রামাণ্য ঐতিহাসিক দলিল।'},
+      {q: 'সুলতানি যুগে ফারসি এবং হিন্দি শব্দের সংমিশ্রণে ভারতের সাধারণ মানুষের যোগাযোগের জন্য কোন্ নতুন ভাষার উদ্ভব ঘটেছিল?', opts: ['মারাঠি', 'গুরুমুখি', 'উর্দু', 'পালি'], ans: 2, exp: 'হিন্দু ও মুসলিমদের পারস্পরিক ভাব বিনিময়ের মাধ্যম হিসেবে এই দুই ভাষার সংমিশ্রণে সুলতানি যুগেই উর্দু ভাষার উদ্ভব ও বিকাশ ঘটে।'},
+      {q: 'কোন্ চারণকবির রচিত পৃথ্বীরাজ রাসো গ্রন্থ থেকে রাজপুত বীর পৃথ্বীরাজ চৌহানের বীরত্বকাহিনি জানা যায়?', opts: ['চাঁদ বরদৈ', 'শার্ঙ্গধর', 'মালিক মহম্মদ জয়সি', 'তুলসীদাস'], ans: 0, exp: 'হিন্দি সাহিত্যের আদি যুগের এই অসামান্য বীরত্বব্যঞ্জক কাব্যটি রচনা করেছিলেন পৃথ্বীরাজ চৌহানের সভাকবি চাঁদ বরদৈ।'},
+      {q: 'চিকিৎসাশাস্ত্রের ওপর মুজমুআ-ই-জিয়াই নামক বিখ্যাত গ্রন্থটি মহম্মদ বিন তুঘলকের আমলে কে রচনা করেন?', opts: ['শামসউদ্দিন মুস্তৌফি', 'জিয়া মহম্মদ', 'মাধবকার', 'জয়নুল আবেদিন'], ans: 1, exp: 'সুলতানি যুগে ইউনানি ও ভারতীয় চিকিৎসা পদ্ধতির মিশ্রণে চিকিৎসাশাস্ত্রের উন্নতির নিদর্শন হিসেবে জিয়া মহম্মদ এই গ্রন্থটি রচনা করেন।'},
+      {q: 'মুঘল যুগে কাশীরাম দাসের মহাভারত, কবি কঙ্কণ মুকুন্দরামের চণ্ডীমঙ্গল এবং ভারতচন্দ্রের অন্নদামঙ্গল কোন্ সাহিত্যের চরম উৎকর্ষের প্রমাণ দেয়?', opts: ['মারাঠি সাহিত্য', 'অহমিয়া সাহিত্য', 'বাংলা সাহিত্য', 'হিন্দি সাহিত্য'], ans: 2, exp: 'মুঘল যুগে আঞ্চলিক ভাষার বিকাশের ধারা অব্যাহত থাকে এবং এই বিখ্যাত কবিদের অসামান্য সৃষ্টির ফলে বাংলা সাহিত্য নতুন ঐশ্বর্যে ভূষিত হয়।'}
+    ]
+  },
+  15: {
+    name: 'Set 15',
+    icon: '🎨',
+    topic: 'শিল্প, স্থাপত্য ও ভাস্কর্যের চরম বিকাশ (দশম থেকে সপ্তদশ শতক)',
+    questions: [
+      {q: 'পাল যুগে সোমপুর মহাবিহারের অভ্যন্তরে নির্মিত সুবিশাল পাঁচতলা মন্দিরটি লম্বায় ও চওড়ায় কত ছিল?', opts: ['৩৫৬.৫ ফুট দৈর্ঘ্য এবং ৩১৪.৫ ফুট প্রস্থ', '৫০০ ফুট দৈর্ঘ্য এবং ২০০ ফুট প্রস্থ', '১৫০ ফুট দৈর্ঘ্য এবং ১০০ ফুট প্রস্থ', '৫০৭.৫ ফুট দৈর্ঘ্য এবং ২৮৫.৫ ফুট প্রস্থ'], ans: 0, exp: 'ধর্মপালের পরিকল্পনায় নির্মিত এই সুবিশাল পোড়ামাটির ইটের মন্দিরটি ছিল পাল স্থাপত্যের এক বিস্ময়কর নিদর্শন।'},
+      {q: 'পাল যুগে সাধারণ বা দরিদ্র বৌদ্ধ ভক্তরা পুণ্য অর্জনের উদ্দেশ্যে যে ছোটো ছোটো স্তূপ নির্মাণ করতেন, সেগুলিকে কী বলা হত?', opts: ['মহাস্তূপ', 'নিবেদক স্তূপ', 'চৈত্য', 'স্মৃতি স্তূপ'], ans: 1, exp: 'পাহাড়পুর ও ময়নামতীতে প্রাপ্ত এই ছোটো স্তূপগুলিকে নিবেদক স্তূপ বলা হয়, যেগুলির ভেতরে বুদ্ধমূর্তির বদলে মাটির সিলমোহর পাওয়া গেছে।'},
+      {q: 'প্রাচীন বাংলার স্থাপত্যে শিখর দেউল বা রেখ রীতির মন্দিরের অন্যতম উদাহরণ কোন্টি, যা পুরুলিয়া জেলায় অবস্থিত?', opts: ['জটার দেউল', 'বহুলারা গ্রামের সিদ্ধেশ্বর মন্দির', 'তেলকুপির মন্দির ধ্বংসাবশেষ', 'চারার জৈন মন্দির'], ans: 2, exp: 'পুরুলিয়ার তেলকুপিতে অন্তত ২৬টি শিখর দেউল রীতির মন্দিরের ধ্বংসাবশেষ আবিষ্কৃত হয়েছে, যেগুলির অধিকাংশই ছিল শিবমন্দির।'},
+      {q: 'একাদশ-দ্বাদশ শতকের কোন্ বৌদ্ধ পাণ্ডুলিপিগুলিতে প্রাচীন বাংলার চিত্রকলার (মিনিয়েচার পেন্টিং) নিদর্শন পাওয়া যায়?', opts: ['রামচরিত ও গীতগোবিন্দ', 'অষ্টসহস্রিকা প্রজ্ঞাপারমিতা, কারণ্ডব্যূহ এবং বোধিচর্যাবতার', 'দানসাগর ও অদ্ভুতসাগর', 'চিকিৎসাসার সংগ্রহ'], ans: 1, exp: 'এই মহাযান ও বজ্রযান ধর্মসংক্রান্ত পাণ্ডুলিপিগুলিতে লতা-পাতা ও ফুলের সুক্ষ্ম অলংকরণ সহ পাল যুগের চিত্রকলার অসামান্য নিদর্শন টিকে আছে।'},
+      {q: 'চোল রাজেন্দ্র চোল তাঁর নতুন রাজধানী গঙ্গাইকোণ্ডচোলপুরমে ১০২৫ খ্রিস্টাব্দে কোন্ দেবতার বিশালাকার মন্দির নির্মাণ করেছিলেন?', opts: ['বিষ্ণু মন্দির', 'সূর্য মন্দির', 'শিব মন্দির', 'কালী মন্দির'], ans: 2, exp: 'তাঞ্জোরের মন্দিরের অনুকরণে রাজেন্দ্র চোল এই বিশাল ও সুক্ষ্ম কারুকার্যমণ্ডিত শিব মন্দিরটি তাঁর নতুন রাজধানীতে নির্মাণ করেছিলেন।'},
+      {q: 'চোল যুগে পাথর ছাড়া আর কী দিয়ে তৈরি মূর্তিগুলি (বিশেষত নটরাজ মূর্তি) ভাস্কর্যশিল্পের শ্রেষ্ঠ নিদর্শন হিসেবে বিবেচিত হয়?', opts: ['পোড়ামাটি', 'কাঠ', 'ব্রোঞ্জ ও পঞ্চধাতু', 'লোহা'], ans: 2, exp: 'একাদশ-দ্বাদশ শতকে চোল শিল্পীদের তৈরি ব্রোঞ্জ ও পঞ্চধাতুর নটরাজ মূর্তিগুলি সারল্য, সৌন্দর্য ও শিল্পনৈপুণ্যের কারণে জগদ্বিখ্যাত।'},
+      {q: 'সুলতানি যুগে নির্মিত আড়াই দিন কা ঝোপড়া মসজিদটি কোথায় অবস্থিত?', opts: ['দিল্লিতে', 'লাহোরে', 'আজমিরে', 'জৌনপুরে'], ans: 2, exp: 'কুতুবউদ্দিন আইবক দিল্লি বিজয়ের পর আজমিরে এই মসজিদটি নির্মাণ করেন, যা প্রারম্ভিক ইন্দো-ইসলামীয় স্থাপত্যের অন্যতম নিদর্শন।'},
+      {q: 'ইলতুৎমিসের রাজত্বকালে নির্মিত স্থাপত্যকীর্তিগুলির মধ্যে কোন্টি উল্লেখযোগ্য?', opts: ['আলাই দরওয়াজা', 'জামাইত খাঁ মসজিদ', 'হাউস-ই-শামসি এবং শামসি ইদগাহ', 'আদিনা মসজিদ'], ans: 2, exp: 'ইলতুৎমিস কুতুব মিনারের কাজ শেষ করার পাশাপাশি এই দুটি উল্লেখযোগ্য জলাধার ও ইদগাহ নির্মাণ করেছিলেন।'},
+      {q: 'কোন্ মুসলিম শাসকের নির্মিত স্থাপত্যে হিন্দু মন্দিরগুলিকে মূলত মসজিদে রূপান্তরিত করা হয়েছিল, যার উৎকৃষ্ট উদাহরণ অতলা মসজিদ?', opts: ['জৌনপুরের শাসনকর্তা', 'গুজরাটের সুলতান', 'বাংলার সুলতান', 'মালবের শাসক'], ans: 0, exp: 'প্রাদেশিক স্থাপত্য রীতির মধ্যে জৌনপুরী স্থাপত্যে হিন্দু প্রভাব ছিল সর্বাধিক, এবং অতলা মসজিদ এই রীতির অন্যতম শ্রেষ্ঠ নিদর্শন।'},
+      {q: 'মুঘল সম্রাট আকবরের আমলে নির্মিত ফতেহপুর সিক্রির বিশাল প্রবেশদ্বারটির নাম কী?', opts: ['আলাই দরওয়াজা', 'বুলন্দ দরওয়াজা', 'কোতোয়ালি দরওয়াজা', 'দাখিল দরওয়াজা'], ans: 1, exp: 'আকবরের গুজরাট জয়ের স্মারক হিসেবে ফতেহপুর সিক্রিতে নির্মিত এই বিশাল ও সুউচ্চ প্রবেশদ্বারটি মুঘল স্থাপত্যের এক অনন্য কীর্তি।'},
+      {q: 'মুঘল সম্রাট শাহজাহানের আমলে নির্মিত কোন্ স্থাপত্যকে মুঘল শিল্পরীতির চরম উৎকর্ষ বলা হয়?', opts: ['বুলন্দ দরওয়াজা', 'পাঁচমহল', 'তাজমহল ও মোতি মসজিদ', 'লালকেল্লা'], ans: 2, exp: 'শাহজাহানের আমলে শ্বেতপাথরে নির্মিত তাজমহল, মোতি মসজিদ, শিসমহল প্রভৃতি মুঘল স্থাপত্যকে সৌন্দর্যের চরম শিখরে পৌঁছে দিয়েছিল।'},
+      {q: 'বাবর মাত্র চার বছর রাজত্ব করলেও আগ্রা, ফতেপুর সিক্রি, ঢোলপুর ছাড়াও কোন্ কোন্ স্থানে মসজিদ নির্মাণ করেছিলেন?', opts: ['পানিপথের কাবুলবাগ মসজিদ ও সম্বলের জামা মসজিদ', 'জৌনপুরের অতলা মসজিদ', 'আজমিরের আড়াই দিন কা ঝোপড়া', 'পাণ্ডুয়ার একলাখি মসজিদ'], ans: 0, exp: 'স্বল্প সময়ের রাজত্বেও বাবর শিল্পের প্রতি তাঁর অনুরাগের প্রমাণ হিসেবে পানিপথ এবং সম্বলে এই মসজিদগুলি নির্মাণ করেছিলেন।'},
+      {q: 'মুঘল দরবারে চিত্রশিল্পের চরম বিকাশ ঘটেছিল। মির সৈয়দ আলি ও খাজা আব্বাস নামে দুজন বিখ্যাত চিত্রশিল্পী কোন্ মুঘল সম্রাটের দরবারে ছিলেন?', opts: ['বাবর', 'হুমায়ুন', 'আকবর', 'জাহাঙ্গির'], ans: 1, exp: 'পারস্য থেকে ফিরে আসার সময় সম্রাট হুমায়ুন এই দুজন প্রখ্যাত চিত্রশিল্পীকে নিজের দরবারে নিয়ে আসেন, যাঁদের হাত ধরে মুঘল চিত্রকলার ভিত্তি স্থাপিত হয়।'},
+      {q: 'তুর্কিদের আগমনের ফলে ভারতীয় স্থাপত্যে কোন্ দুটি নতুন উপাদানের বহুল ব্যবহার শুরু হয়, যা আগে হিন্দু বা বৌদ্ধ স্থাপত্যে অজানা ছিল?', opts: ['বিম ও খোদাই করা স্তম্ভ', 'খিলান ও গম্বুজ', 'কাঠের ছাদ ও পোড়ামাটির টালি', 'ব্রোঞ্জ ও তামা'], ans: 1, exp: 'যদিও ড. সতীশ চন্দ্রের মতে এগুলি ভারতীয়দের সম্পূর্ণ অজানা ছিল না, তবে তুর্কিদের আগমনের পরেই ভারতীয় স্থাপত্যে খিলান (Arch) এবং গম্বুজের (Dome) ব্যাপক ও সার্থক ব্যবহার শুরু হয়।'},
+      {q: 'সুলতান ফিরোজ তুঘলক স্থাপত্যশিল্পে তাঁর অবদানের জন্য বিখ্যাত ছিলেন। তিনি দিল্লির উপকণ্ঠে কোন্ দুর্গটি নির্মাণ করেছিলেন?', opts: ['লালকেল্লা', 'সিরি ফোর্ট', 'ফিরোজ শাহ কোটলা', 'পুরানা কিলা'], ans: 2, exp: 'নগর ও দুর্গ নির্মাণে অত্যন্ত আগ্রহী সুলতান ফিরোজ তুঘলক দিল্লির কাছে ফিরোজাবাদ নগরী প্রতিষ্ঠা করেন এবং সেখানেই এই দুর্গটি নির্মাণ করেন।'}
+    ]
+  }
+};
+
+// ============================================================
+//  গ্লোবাল ভেরিয়েবল
+// ============================================================
+const LABELS = ['ক', 'খ', 'গ', 'ঘ'];
+let currentSetId = 1;
+let cur = 0, score = 0, wrong = 0, answered = false, timerInterval, timeLeft = 10 * 60;
+let userAnswers = [];
+let isLoggedIn = false;
+let currentUser = null;
+let pendingSetId = null;
+
+// ============================================================
+//  হাব পেজ বিল্ড
+// ============================================================
+function buildHub() {
+  const grid = document.getElementById('setGrid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= TOTAL_SETS; i++) {
+    const set = allSets[i];
+    const card = document.createElement('div');
+    card.className = 'set-card';
+    card.innerHTML = `
+      <div class="icon">${set.icon}</div>
+      <div class="set-num">${set.name}</div>
+      <div class="set-title">${set.topic}</div>
+      <div class="set-meta"><span>১৫ প্রশ্ন</span><span>১০ মিনিট</span></div>
+    `;
+    card.onclick = () => selectSet(i);
+    grid.appendChild(card);
+  }
+}
+
+function showHub() {
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('timerBox').classList.remove('danger');
+  clearInterval(timerInterval);
+  if (currentUser) {
+    document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+  } else {
+    document.getElementById('hubUserInfo').innerHTML = '';
+  }
+}
+
+function goToHub() {
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('timerBox').classList.remove('danger');
+  clearInterval(timerInterval);
+  isLoggedIn = false;
+  currentUser = null;
+}
+
+// ============================================================
+//  সেট সিলেক্ট - সবসময় লগইন চেক
+// ============================================================
+function selectSet(id) {
+  currentSetId = id;
+  const set = allSets[id];
+  pendingSetId = id;
+  document.getElementById('loginSetName').textContent = `📚 ${set.name} — ${set.topic}`;
+  document.getElementById('loginOverlay').classList.add('active');
+  document.getElementById('loginUsername').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('limitInfo').style.display = 'none';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginUsername').focus();
+}
+
+// ============================================================
+//  লগইন ফাংশন
+// ============================================================
+function doLoginFromSet() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const errorEl = document.getElementById('loginError');
+  const limitInfo = document.getElementById('limitInfo');
+  const loginBtn = document.getElementById('loginBtn');
+
+  if (!username || !password) {
+    errorEl.textContent = '❌ দয়া করে ইউজারনেম ও পাসওয়ার্ড দিন।';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const user = userData.find(u => u.username === username && u.password === password);
+  if (user) {
+    const setAttempts = user.attempts[currentSetId] || 0;
+    if (setAttempts >= MAX_ATTEMPTS) {
+      limitInfo.style.display = 'block';
+      document.getElementById('limitMsg').textContent = `আপনি এই অ্যাকাউন্ট দিয়ে ${allSets[currentSetId].name} এর সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন। আর Test দেওয়া সম্ভব নয়।`;
+      errorEl.style.display = 'none';
+      loginBtn.disabled = true;
+      return;
+    }
+    
+    isLoggedIn = true;
+    currentUser = user;
+    errorEl.style.display = 'none';
+    limitInfo.style.display = 'none';
+    loginBtn.disabled = false;
+    document.getElementById('loginOverlay').classList.remove('active');
+    
+    document.getElementById('hubUserInfo').innerHTML = `👤 ${currentUser.username} — Test দিতে সেট সিলেক্ট করো।`;
+    
+    startQuiz(currentSetId);
+  } else {
+    errorEl.textContent = '❌ ভুল ইউজারনেম বা পাসওয়ার্ড। আবার চেষ্টা করুন।';
+    errorEl.style.display = 'block';
+    limitInfo.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLoginFromSet();
+  });
+  document.getElementById('loginUsername').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLoginFromSet();
+  });
+  buildHub();
+  document.getElementById('hubPage').classList.remove('hidden');
+  document.getElementById('testArea').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+});
+
+// ============================================================
+//  কুইজ ফাংশন
+// ============================================================
+function startQuiz(setId) {
+  if (!isLoggedIn || !currentUser) return;
+  
+  const setAttempts = currentUser.attempts[setId] || 0;
+  if (setAttempts >= MAX_ATTEMPTS) {
+    alert(`⚠️ আপনি এই সেটের সর্বোচ্চ ${MAX_ATTEMPTS} বার Test দিয়েছেন।`);
+    return;
+  }
+  
+  currentUser.attempts[setId] = (currentUser.attempts[setId] || 0) + 1;
+  
+  cur = 0; score = 0; wrong = 0; answered = false;
+  timeLeft = 10 * 60; userAnswers = [];
+  document.getElementById('hubPage').classList.add('hidden');
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('testArea').classList.remove('hidden');
+  document.getElementById('timerBox').classList.remove('danger');
+  
+  const set = allSets[setId];
+  document.getElementById('testSetLabel').textContent = set.name;
+  document.getElementById('testSetName').textContent = 'শিক্ষাবিজ্ঞান';
+  document.getElementById('testTopic').textContent = set.topic;
+  
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+  loadQ();
+}
+
+function tick() {
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  document.getElementById('timerDisplay').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  if (timeLeft <= 60) document.getElementById('timerBox').classList.add('danger');
+  if (timeLeft <= 0) { clearInterval(timerInterval); showResult(); }
+}
+
+function loadQ() {
+  answered = false;
+  const set = allSets[currentSetId];
+  const q = set.questions[cur];
+  document.getElementById('qNum').textContent = 'প্রশ্ন ' + (cur + 1) + ' / ' + set.questions.length;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = ((cur + 1) / set.questions.length * 100) + '%';
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = cur === set.questions.length - 1 ? 'ফলাফল দেখো' : 'পরবর্তী →';
+  document.getElementById('explanation').classList.remove('show');
+
+  const opts = document.getElementById('qOpts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = '<div class="opt-circle">' + LABELS[i] + '</div><div class="opt-text">' + o + '</div>';
+    btn.onclick = () => answer(i);
+    opts.appendChild(btn);
+  });
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const set = allSets[currentSetId];
+  const q = set.questions[cur];
+  userAnswers[cur] = i;
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.classList.add('disabled'));
+  btns[q.ans].classList.add('correct');
+  if (i !== q.ans) { btns[i].classList.add('wrong'); wrong++; }
+  else score++;
+  document.getElementById('scoreShow').textContent = 'সঠিক: ' + score + ' | ভুল: ' + wrong;
+  document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQ() {
+  const set = allSets[currentSetId];
+  cur++;
+  if (cur >= set.questions.length) { clearInterval(timerInterval); showResult(); return; }
+  loadQ();
+}
+
+function showResult() {
+  document.getElementById('testArea').classList.add('hidden');
+  const rw = document.getElementById('resultWrap');
+  rw.classList.add('show');
+  const set = allSets[currentSetId];
+  const pct = Math.round(score / set.questions.length * 100);
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('rbCorrect').textContent = score;
+  document.getElementById('rbWrong').textContent = wrong;
+  document.getElementById('rbPct').textContent = pct + '%';
+  
+  const remaining = MAX_ATTEMPTS - (currentUser.attempts[currentSetId] || 0);
+  document.getElementById('attemptInfo').innerHTML = `👤 ${currentUser.username} — ${set.name}: বাকি আছে <strong>${remaining}</strong> বার Test দেওয়ার সুযোগ (সর্বোচ্চ ${MAX_ATTEMPTS} বার)`;
+  
+  const grades = [
+    [90, '🌟', 'অসাধারণ!'],
+    [70, '👍', 'খুব ভালো!'],
+    [50, '📚', 'ভালো চেষ্টা!'],
+    [0, '💪', 'চেষ্টা চালিয়ে যাও!']
+  ];
+  const g = grades.find(x => pct >= x[0]);
+  document.getElementById('resultIcon').textContent = g[1];
+  document.getElementById('resultGrade').textContent = g[2] + ' (' + set.topic + ')';
+}
+
+function showReview() {
+  document.getElementById('resultWrap').classList.remove('show');
+  document.getElementById('testArea').classList.remove('hidden');
+  cur = 0;
+  loadReview();
+}
+
+function loadReview() {
+  const set = allSets[currentSetId];
+  if (cur >= set.questions.length) { 
+    document.getElementById('testArea').classList.add('hidden'); 
+    document.getElementById('resultWrap').classList.add('show'); 
+    return; 
+  }
+  const q = set.questions[cur];
+  document.getElementById('qNum').textContent = 'Review — প্রশ্ন ' + (cur + 1) + ' / ' + set.questions.length;
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('progressFill').style.width = ((cur + 1) / set.questions.length * 100) + '%';
+  document.getElementById('nextBtn').disabled = false;
+  document.getElementById('nextBtn').textContent = cur === set.questions.length - 1 ? 'শেষ করো' : 'পরবর্তী →';
+  document.getElementById('nextBtn').onclick = () => { cur++; loadReview(); };
+
+  const opts = document.getElementById('qOpts');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt disabled';
+    if (i === q.ans) btn.classList.add('correct');
+    else if (userAnswers[cur] === i) btn.classList.add('wrong');
+    btn.innerHTML = '<div class="opt-circle">' + LABELS[i] + '</div><div class="opt-text">' + o + '</div>';
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('explanationText').innerHTML = '<strong>ব্যাখ্যা:</strong> ' + q.exp;
+  document.getElementById('explanation').classList.add('show');
+  document.getElementById('scoreShow').textContent = 'সবুজ = সঠিক উত্তর';
+}
+</script>
+
+</body>
+</html>
